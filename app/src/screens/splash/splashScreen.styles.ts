@@ -1,5 +1,6 @@
-import { Dimensions, StyleSheet } from 'react-native';
-const { width, height } = Dimensions.get('window');
+import React from 'react';
+import { StyleSheet } from 'react-native';
+
 
 export const styles = StyleSheet.create({
   container: {
@@ -9,8 +10,8 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   splashImage: {
-    width: width,
-    height: height,
+    width: "100%",
+    height: "100%",
   },
   coverImage: {
     position: "absolute",
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
   textContainer: {
     position: 'absolute',
     top:463,
-    left:80
+    left:70
 },
 text: {
     color: '#FFFFFF',
@@ -30,12 +31,18 @@ text: {
     height:91,
     textAlign: 'center',
 },
+subTextContainer:{
+  position: 'absolute',
+  top:563,
+  left:60
+},
 subText: {
     color: '#FFFFFF',
     fontSize:14,
     fontFamily:"Montserrat_600SemiBold",
     textAlign: 'center',
     marginTop: 8,
-    width: 208,
+    width: 250,
+    height:90
 }
 }); 
