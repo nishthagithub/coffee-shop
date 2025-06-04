@@ -1,14 +1,12 @@
 const { getDefaultConfig } = require('expo/metro-config');
 
-const defaultConfig = getDefaultConfig(__dirname);
+const config = getDefaultConfig(__dirname);
 
-defaultConfig.transformer = {
-  babelTransformerPath: require.resolve('react-native-svg-transformer'),
-};
+// Add any custom config here
+config.resolver.assetExts.push('db');
 
-defaultConfig.resolver = {
-  assetExts: defaultConfig.resolver.assetExts.filter(ext => ext !== 'svg'),
-  sourceExts: [...defaultConfig.resolver.sourceExts, 'svg'],
-};
+// Fix for the asset registry path issue
+config.resolver.sourceExts = [...config.resolver.sourceExts, 'mjs', 'cjs'];
+config.resolver.assetExts = [...config.resolver.assetExts, 'png', 'jpg', 'jpeg', 'gif', 'webp'];
 
-module.exports = defaultConfig;
+module.exports = config;
