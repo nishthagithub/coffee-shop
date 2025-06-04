@@ -1,14 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 import Login from '../src/screens/login/Login'
 
 const profile = () => {
   return (
-    <View>
-      <Text>
+    <View style={{flex:1}}>
+      
        <Login/>
         
-        </Text>
     </View>
   )
 }

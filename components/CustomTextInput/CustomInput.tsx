@@ -1,6 +1,6 @@
-import { StyleProp, View, ViewStyle } from 'react-native'
 import React, { useState } from 'react'
-import { TextInput,TextInputProps, } from 'react-native-paper'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { TextInput, TextInputProps, } from 'react-native-paper'
 
 
 interface customInputProps extends TextInputProps{
@@ -24,15 +24,13 @@ React.FC<customInputProps> = ({
     setIsPasswordVisible((prev:any) => !prev);
   };
   return (
-    <View style={{
-        width:300,
-        height:50,
-    }}>
+    <View style={customStyle}>
       <TextInput
        mode='flat'
        secureTextEntry={!isPasswordVisible && hidePassword}
        underlineColor="grey"
         activeUnderlineColor="grey"
+        dense={true}
         right={
           hidePassword ? (
             <TextInput.Icon
@@ -41,9 +39,7 @@ React.FC<customInputProps> = ({
             />
           ) : null
         }
-        style={{
-            backgroundColor: 'transparent',
-          }}
+          style={[styles.input, props.style]}
         {...props}
 
       />
@@ -52,4 +48,10 @@ React.FC<customInputProps> = ({
 }
 
 export default CustomInput
+const styles = StyleSheet.create({
+  input: {
+    // textAlign: 'left',
+    // paddingHorizontal: 0, 
+  },
+});
 
