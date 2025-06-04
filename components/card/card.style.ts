@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   card: {
-    width: 148,
+    width: 140,
     height: 193,
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -13,9 +13,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     justifyContent: 'flex-start',
+    marginTop:10
   },
   image: {
-    width: 144,
+    width: 140,
     height: 100,
     borderRadius: 10,
     alignSelf: 'center',

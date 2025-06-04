@@ -22,13 +22,35 @@ export const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     text:{
-        // marginLeft:20,
+        color:"#000000",
         fontSize:14,
-        fontFamily:"Montserrat_600SemiBold"
+        fontFamily:"Montserrat_600SemiBold",
+        fontWeight:"700"
     },
     pageContent:{
         paddingHorizontal:25
     },
+    subHeading:{
+        marginTop:15,
+        fontFamily:"Montserrat_600SemiBold",
+        fontWeight:"bold"
+    },
+    specialOffers:{
+         flexDirection: 'row',
+          flexWrap: 'wrap', 
+          justifyContent: 'space-between'
+    },
+    footer:{
+        alignItems:"center",
+        gap:15,
+        backgroundColor:"grey",
+        color:"#FFFFFF"
+    },
+    footertext:{
+        color:"#ffffff",
+        fontFamily:"Montserrat_500Medium",
+        
+    }
     
     
 })

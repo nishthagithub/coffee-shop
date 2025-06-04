@@ -19,9 +19,10 @@ const HomeScreen = () => {
     </View>
      <Ionicons name="notifications-outline" size={24}  />
    </View>
+   <ScrollView>
    <View style={styles.pageContent} >
      <Text style={styles.text}>Good Morning, User</Text>
-     <Text>BestSellers</Text>
+     <Text style={styles.subHeading}>Categories</Text>
      
      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:12}} >
      {coffeeProducts.map((item, index) => (
@@ -34,7 +35,35 @@ const HomeScreen = () => {
        />
      ))}
      </ScrollView>
+     <View>
+     <Text style={styles.subHeading}>Special Offers</Text>
+     <View style={styles.specialOffers}>
+     {coffeeProducts.map((item, index) => (
+      <View key={index} style={{ width: '48%', marginBottom: 12 }}>
+        <Card
+          title={item.title}
+          price={item.price}
+          imageUrl={item.imageUrl}
+          hasSugar={item.hasSugar}
+        />
+      </View>
+    ))}
+
+     </View>
+
   </View>
+  </View>
+  <View style={styles.footer}>
+    <Text style={styles.footertext}>
+      Coffee-Shop 2025 | All Rights Reserved
+    </Text>
+    <Text style={styles.footertext}>
+      Address . Contact . Social Media
+    </Text>
+  </View>
+  </ScrollView>
+  
+  
    </SafeAreaView>
 </>
   );
