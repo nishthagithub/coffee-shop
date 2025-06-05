@@ -9,7 +9,7 @@ const SplashScreen = () => {
   const router = useRouter();
   
   const handlePress = () => {
-    router.replace('/src/screens/home/homeScreen');
+    router.replace('/(tabs)/home');
   }
 
   return (

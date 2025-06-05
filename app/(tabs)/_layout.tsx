@@ -1,10 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
 import React from 'react'
-import CartIcon from "../../assets/icons/cart.svg"
-import HeartIcon from "../../assets/icons/heart.svg"
-import HomeIcon from "../../assets/icons/homee.svg"
-import UserIcon from "../../assets/icons/user.svg"
 
 const _layout = () => {
   return (
@@ -25,7 +21,7 @@ const _layout = () => {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: "Home",
           tabBarIcon: ({focused}) => (
