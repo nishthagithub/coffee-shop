@@ -1,22 +1,23 @@
 import { Stack } from 'expo-router'
 import React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import signup from './src/screens/signup/signup'
 
 const _layout = () => {
   return (
     <SafeAreaProvider>
-      <Stack>
+      <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen 
           name="(tabs)" 
-          options={{ 
-            headerShown: false 
-          }} 
+         
         />
         <Stack.Screen 
           name="index" 
-          options={{ 
-            headerShown: false 
-          }} 
+         
+        />
+        <Stack.Screen
+         name="signup"
+         
         />
       </Stack>
     </SafeAreaProvider>

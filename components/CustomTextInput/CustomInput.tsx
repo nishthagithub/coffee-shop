@@ -29,8 +29,8 @@ React.FC<customInputProps> = ({
       <TextInput
        mode='flat'
        secureTextEntry={!isPasswordVisible && hidePassword}
-       underlineColor={isFocused?"transparent":"grey"}
-        activeUnderlineColor={isFocused?"#80A896":"grey"}
+       underlineColor="#E2E2E2"
+        activeUnderlineColor={isFocused?"#80A896":"#E2E2E2"}
         dense={true}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -53,8 +53,7 @@ React.FC<customInputProps> = ({
 export default CustomInput
 const styles = StyleSheet.create({
   input: {
-    // textAlign: 'left',
-    // paddingHorizontal: 0, 
+  
   },
 });
 

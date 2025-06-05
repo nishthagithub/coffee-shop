@@ -4,13 +4,16 @@ import { Button, Image, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { styles } from "./login.styles"
 import CustomButton from '@/components/customButton/CustomButton'
-import { Link } from 'expo-router'
+import {router} from 'expo-router'
 
 const Login = () => {
+  const handlePress=()=>{
+    router.replace('/src/screens/signup/signup');
+  }
   return (
     <SafeAreaProvider>
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View >
         <View style={{alignItems:"center"}}>
          
         <Image source={require("../../../../assets/images/blackcoffee1.png")} style={styles.image}/>
@@ -36,7 +39,7 @@ const Login = () => {
         </View>
         <Text style={styles.text}>Forget Password ?</Text>
         <CustomButton title='Submit'/>
-        <Text style={styles.subTextt}>Didn't Have Account ? Sign UP</Text>
+        <Text style={styles.subTextt} onPress={handlePress}>Didn't Have Account ?<Text style={styles.subText2}> Sign UP</Text></Text>
       </View>
     
     </SafeAreaView>

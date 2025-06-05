@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   subHeader: {
     fontSize: 16,
     marginBottom: 24,
-    color: "#555",
+    color: "#7C7C7C",
   },
   inputContainer: {
     width: "95%",
@@ -25,14 +25,13 @@ export const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#333",
+    color: "#7C7C7C",
   },
   input: {
     paddingVertical: 8,
     fontSize: 16,
     backgroundColor:"#ffffff",
     paddingHorizontal: 0,
-    
   },
   text:{
     textAlign:"right",
@@ -48,5 +47,8 @@ export const styles = StyleSheet.create({
     color:"#000000",
     fontFamily:"Montserrat_600SemiBold",
     fontWeight:"500"
+  },
+  subText2:{
+    color:"#80A896"
   }
 })
