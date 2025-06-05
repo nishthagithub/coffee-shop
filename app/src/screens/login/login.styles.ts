@@ -25,16 +25,28 @@ export const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    // marginBottom: 6,
     color: "#333",
   },
   input: {
-    borderBottomWidth: 2,
-    borderBottomColor: "#888",
     paddingVertical: 8,
     fontSize: 16,
     backgroundColor:"#ffffff",
     paddingHorizontal: 0,
     
   },
+  text:{
+    textAlign:"right",
+    marginRight:12,
+    fontSize:12,
+    color:"#000000",
+    fontFamily:"Montserrat_600SemiBold",
+    fontWeight:"700"
+  },
+  subTextt:{
+    textAlign:"center",
+    marginTop:10,
+    color:"#000000",
+    fontFamily:"Montserrat_600SemiBold",
+    fontWeight:"500"
+  }
 })

@@ -19,6 +19,7 @@ React.FC<customInputProps> = ({
 
 }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(!hidePassword);
+    const [isFocused,setIsFocused] =useState(false)
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev:any) => !prev);
@@ -28,9 +29,11 @@ React.FC<customInputProps> = ({
       <TextInput
        mode='flat'
        secureTextEntry={!isPasswordVisible && hidePassword}
-       underlineColor="grey"
-        activeUnderlineColor="grey"
+       underlineColor={isFocused?"transparent":"grey"}
+        activeUnderlineColor={isFocused?"#80A896":"grey"}
         dense={true}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         right={
           hidePassword ? (
             <TextInput.Icon

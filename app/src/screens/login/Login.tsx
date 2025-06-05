@@ -3,6 +3,8 @@ import React from 'react'
 import { Button, Image, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { styles } from "./login.styles"
+import CustomButton from '@/components/customButton/CustomButton'
+import { Link } from 'expo-router'
 
 const Login = () => {
   return (
@@ -10,9 +12,10 @@ const Login = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={{alignItems:"center"}}>
-
+         
         <Image source={require("../../../../assets/images/blackcoffee1.png")} style={styles.image}/>
         </View>
+        
         <Text style={styles.header}>Login</Text>
 
         <Text style={styles.subHeader}>Enter Email and Password</Text>
@@ -31,7 +34,9 @@ const Login = () => {
             hidePassword
           />
         </View>
-        <Button title='Submit'/>
+        <Text style={styles.text}>Forget Password ?</Text>
+        <CustomButton title='Submit'/>
+        <Text style={styles.subTextt}>Didn't Have Account ? Sign UP</Text>
       </View>
     
     </SafeAreaView>
