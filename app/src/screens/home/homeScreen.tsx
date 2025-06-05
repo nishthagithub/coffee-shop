@@ -1,12 +1,16 @@
 import Card from '@/components/card/card';
 import React from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import coffeeProducts from '../../data/dummyData';
 import { styles } from './homeScreen.styles';
+import { router } from 'expo-router';
 
 const HomeScreen = () => {
+  // const handlePress=()=>{
+  //   router.push("/src/screens/CoffeeInfo/[coffeeId]")
+  // }
   return (
     <>
     
@@ -26,14 +30,21 @@ const HomeScreen = () => {
      
      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:12}} >
      {coffeeProducts.map((item, index) => (
+      <TouchableOpacity
+      //  onPress={handlePress}
+       >
        <Card
          key={index}
          title={item.title}
-         price={item.price}
+         
          imageUrl={item.imageUrl}
          hasSugar={item.hasSugar}
+         defaultSize={item.defaultSize}
+         cupSizes={item.cupSizes}
        />
+        </TouchableOpacity>
      ))}
+    
      </ScrollView>
      <View>
      <Text style={styles.subHeading}>Special Offers</Text>
@@ -41,10 +52,12 @@ const HomeScreen = () => {
      {coffeeProducts.map((item, index) => (
       <View key={index} style={{ width: '48%', marginBottom: 12 }}>
         <Card
+        key={item.id}
           title={item.title}
-          price={item.price}
           imageUrl={item.imageUrl}
           hasSugar={item.hasSugar}
+          defaultSize={item.defaultSize}
+          cupSizes={item.cupSizes}
         />
       </View>
     ))}

@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './card.style';
 import { productCardProps } from "./card.types";
 
-const Card = ({imageUrl, title, price,hasSugar}: productCardProps) => {
+const Card = ({imageUrl, title,hasSugar,defaultSize,cupSizes}: productCardProps) => {
   return (
     <View style={styles.card}>
       <Image 
@@ -15,7 +15,7 @@ const Card = ({imageUrl, title, price,hasSugar}: productCardProps) => {
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.type}>{hasSugar?"With Sugar":"Without Sugar"}</Text>
       <View style={styles.bottomRow}>
-        <Text style={styles.price}>Rs.{price}</Text>
+        <Text style={styles.price}>Rs.{cupSizes?.[defaultSize] ?? "N/A"}</Text>
         <TouchableOpacity>
           <Ionicons name="add-circle" size={30.25} color="#00512C"  />
         </TouchableOpacity>
