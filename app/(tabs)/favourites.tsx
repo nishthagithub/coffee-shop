@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import Favourites from "../src/screens/favorites/favorites"
 
 const favourites = () => {
   return (
-    <View>
-      <Text>favourites</Text>
-    </View>
+    <Favourites/>
   )
 }
 

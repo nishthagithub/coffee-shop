@@ -6,4 +6,5 @@ export interface productCardProps {
     hasSugar?: boolean;
     defaultSize: CupSize;
     cupSizes: Record<CupSize, number>;
+    showHeartIcon?: boolean;
 }

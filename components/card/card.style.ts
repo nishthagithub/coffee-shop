@@ -43,6 +43,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     
   },
+  icon:{
+flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
+  }
 });
 
 export default styles;
