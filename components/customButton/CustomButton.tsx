@@ -7,14 +7,21 @@ interface customBtn {
     title:string,
     onPress?:()=>void,
     buttonStyle?:StyleProp<ViewStyle>,
-    textStyle?:StyleProp<TextStyle>
+    textStyle?:StyleProp<TextStyle>,
+    price?:number
 }
 
-const CustomButton:React.FC<customBtn> = ({title,buttonStyle,onPress,textStyle}) => {
+const CustomButton:React.FC<customBtn> = ({title,buttonStyle,onPress,textStyle,price}) => {
   return (
    <View style={styles.container}>
     <TouchableOpacity style={[styles.button,buttonStyle]} onPress={onPress}>
+      <View style={{flexDirection:"row"}}>
+
          <Text style={[styles.text, textStyle]}>{title}</Text>
+         {price !== undefined && (
+          <Text style={{color:"#fff"}}> ₹{price}</Text>
+        )}
+      </View>
 
     </TouchableOpacity>
     </View>
@@ -33,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor:"#00512C",
     width:330,
     borderRadius: 20,
-    height:38,
+    height:45,
     justifyContent: 'center', 
     alignItems: 'center',
    

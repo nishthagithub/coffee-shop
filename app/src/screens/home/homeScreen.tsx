@@ -8,9 +8,9 @@ import { styles } from './homeScreen.styles';
 import { router } from 'expo-router';
 
 const HomeScreen = () => {
-  // const handlePress=()=>{
-  //   router.push("/src/screens/CoffeeInfo/[coffeeId]")
-  // }
+  const handlePress=()=>{
+    router.push("/src/screens/CoffeeInfo/[coffeeId]")
+  }
   return (
     <>
     
@@ -31,12 +31,12 @@ const HomeScreen = () => {
      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:12}} >
      {coffeeProducts.map((item, index) => (
       <TouchableOpacity
-      //  onPress={handlePress}
+      key={item.id}
+      onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)}
        >
        <Card
-         key={index}
+          key={item.id}
          title={item.title}
-         
          imageUrl={item.imageUrl}
          hasSugar={item.hasSugar}
          defaultSize={item.defaultSize}
@@ -50,7 +50,8 @@ const HomeScreen = () => {
      <Text style={styles.subHeading}>Special Offers</Text>
      <View style={styles.specialOffers}>
      {coffeeProducts.map((item, index) => (
-      <View key={index} style={{ width: '48%', marginBottom: 12 }}>
+      <TouchableOpacity  key={item.id}
+      onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)} style={{ width: '48%', marginBottom: 12 }}>
         <Card
         key={item.id}
           title={item.title}
@@ -59,7 +60,7 @@ const HomeScreen = () => {
           defaultSize={item.defaultSize}
           cupSizes={item.cupSizes}
         />
-      </View>
+      </TouchableOpacity>
     ))}
 
      </View>

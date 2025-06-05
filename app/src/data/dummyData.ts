@@ -1,6 +1,6 @@
 import { CupSize } from "@/components/card/card.types";
-import image1 from "../../../assets/images/blackcoffee1.png";
-import image2 from "../../../assets/images/cappuccino1.png";
+import image1 from "../../../assets/images/coffee5.png";
+import image2 from "../../../assets/images/coffee4.png";
 
 const coffeeProducts:{
   id: string;
