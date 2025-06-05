@@ -24,9 +24,14 @@ const CoffeeInfo = () => {
           <View style={{ height: 290 }}>
           
             <Image source={coffee?.imageUrl} style={styles.image} />
-            <TouchableOpacity style={styles.icon} onPress={()=>router.push("/src/screens/home/homeScreen")} >
+            <View style={{flexDirection:"row",justifyContent:"space-between"}}>
+            <TouchableOpacity style={styles.icon} onPress={()=>router.push("/(tabs)/home")} >
             <Ionicons name='chevron-back' size={30} color="#00582F" />
             </TouchableOpacity>
+            <TouchableOpacity style={styles.icon} onPress={()=>router.push("/(tabs)/favourites")} >
+            <Ionicons name='heart-outline' size={25} color="#00582F" />
+            </TouchableOpacity>
+            </View>
           </View>
           <Text style={styles.text}>{coffee?.title}</Text>
           <Text style={styles.subText}> {coffee?.hasSugar ? 'Has Sugar' : 'No Sugar'}</Text>
