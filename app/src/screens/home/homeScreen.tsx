@@ -1,16 +1,13 @@
 import Card from '@/components/card/card';
+import { router } from 'expo-router';
 import React from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import coffeeProducts from '../../data/dummyData';
 import { styles } from './homeScreen.styles';
-import { router } from 'expo-router';
 
 const HomeScreen = () => {
-  const handlePress=()=>{
-    router.push("/src/screens/CoffeeInfo/[coffeeId]")
-  }
   return (
     <>
     
@@ -28,40 +25,59 @@ const HomeScreen = () => {
      <Text style={styles.text}>Good Morning, User</Text>
      <Text style={styles.subHeading}>Categories</Text>
      
-     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:12}} >
-     {coffeeProducts.map((item, index) => (
-      <TouchableOpacity
-      key={item.id}
-      onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)}
-       >
-       <Card
-          key={item.id}
-         title={item.title}
-         imageUrl={item.imageUrl}
-         hasSugar={item.hasSugar}
-         defaultSize={item.defaultSize}
-         cupSizes={item.cupSizes}
-       />
-        </TouchableOpacity>
-     ))}
     
-     </ScrollView>
+<FlatList
+  horizontal
+  data={coffeeProducts}
+  // numColumns={2}
+  keyExtractor={(item) => item.id.toString()}
+  showsHorizontalScrollIndicator={false}
+  contentContainerStyle={{ gap: 12, paddingHorizontal: 12, paddingVertical: 12 }}
+  renderItem={({ item }) => (
+    <TouchableOpacity
+      onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)}
+    >
+      <Card
+        title={item.title}
+        imageUrl={item.imageUrl}
+        hasSugar={item.hasSugar}
+        defaultSize={item.defaultSize}
+        cupSizes={item.cupSizes}
+      />
+    </TouchableOpacity>
+  )}
+/>
      <View>
      <Text style={styles.subHeading}>Special Offers</Text>
      <View style={styles.specialOffers}>
-     {coffeeProducts.map((item, index) => (
-      <TouchableOpacity  key={item.id}
-      onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)} style={{ width: '48%', marginBottom: 12 }}>
-        <Card
-        key={item.id}
-          title={item.title}
-          imageUrl={item.imageUrl}
-          hasSugar={item.hasSugar}
-          defaultSize={item.defaultSize}
-          cupSizes={item.cupSizes}
-        />
-      </TouchableOpacity>
-    ))}
+   
+     <FlatList
+     scrollEnabled={false}
+  data={coffeeProducts}
+  numColumns={2}
+  keyExtractor={(item) => item.id.toString()}
+  showsVerticalScrollIndicator={false}
+  contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 12 }}
+  columnWrapperStyle={{
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  }}
+  renderItem={({ item }) => (
+    <TouchableOpacity
+      onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)}
+      style={{ flex: 1 }}
+    >
+      <Card
+        title={item.title}
+        imageUrl={item.imageUrl}
+        hasSugar={item.hasSugar}
+        defaultSize={item.defaultSize}
+        cupSizes={item.cupSizes}
+      />
+    </TouchableOpacity>
+  )}
+/>
+
 
      </View>
 

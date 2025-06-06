@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
     container:{
     flex:1,
+    backgroundColor:"#fff"
     },
     profile:{
         width:37,
@@ -25,15 +26,18 @@ export const styles = StyleSheet.create({
         color:"#000000",
         fontSize:14,
         fontFamily:"Montserrat_600SemiBold",
-        fontWeight:"700"
+        fontWeight:"700",
+        marginLeft:10
     },
     pageContent:{
-        paddingHorizontal:25
+        // paddingHorizontal:25
+        marginLeft:15
     },
     subHeading:{
         marginTop:15,
         fontFamily:"Montserrat_600SemiBold",
-        fontWeight:"bold"
+        fontWeight:"bold",
+        marginLeft:15
     },
     specialOffers:{
          flexDirection: 'row',
