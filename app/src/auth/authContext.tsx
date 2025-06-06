@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { createContext, ReactNode, useContext, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { StyleSheet } from 'react-native';
 
 type UserData={
   username:string,
@@ -12,11 +12,28 @@ type AuthContextProps={
   signup:(userData:UserData)=>Promise<void>
   login:(email: string, password: string) => Promise<boolean>;
   logout:()=>Promise<void>
+  checkAuth:()=>Promise<boolean>
 }
 const AuthContexts = createContext<AuthContextProps | undefined>(undefined)
 
 const authContext = ({children}:{children:ReactNode}) => {
  const [user,setUser]=useState<UserData|null>(null);
+
+ const checkAuth = async () => {
+  try {
+    const stored = await AsyncStorage.getItem('user');
+    if (stored) {
+      const storedUser: UserData = JSON.parse(stored);
+      setUser(storedUser);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error checking auth:', error);
+    return false;
+  }
+ };
+
  const signup=async(userData:UserData)=>{
   await AsyncStorage.setItem("user",JSON.stringify(userData))
   setUser(userData);
@@ -40,7 +57,7 @@ const authContext = ({children}:{children:ReactNode}) => {
 };
   
   return (
-    <AuthContexts.Provider value={{ user, signup, login, logout }}>
+    <AuthContexts.Provider value={{ user, signup, login, logout, checkAuth }}>
       {children}
     </AuthContexts.Provider>
   )
