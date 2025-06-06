@@ -34,6 +34,8 @@ React.FC<customInputProps> = ({
         dense={true}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onChangeText={onChangeText}
+        value={value}
         right={
           hidePassword ? (
             <TextInput.Icon
