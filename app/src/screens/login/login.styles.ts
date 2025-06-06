@@ -50,5 +50,10 @@ export const styles = StyleSheet.create({
   },
   subText2:{
     color:"#80A896"
-  }
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
+  },
 })
