@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     height: 193,
     backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 8,
+    padding: 6,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
@@ -18,14 +18,14 @@ const styles = StyleSheet.create({
   image: {
     width: 140,
     height: 100,
-    borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius:10,
     alignSelf: 'center',
   },
   type:{
     fontSize:10,
     color:"#000000",
     fontFamily:"MoMontserrat_600SemiBold"
-   
   },
   title: {
     fontSize: 14,

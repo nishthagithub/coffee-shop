@@ -32,7 +32,7 @@ const HomeScreen = () => {
   // numColumns={2}
   keyExtractor={(item) => item.id.toString()}
   showsHorizontalScrollIndicator={false}
-  contentContainerStyle={{ gap: 12, paddingHorizontal: 12, paddingVertical: 12 }}
+  contentContainerStyle={{ gap: 8, paddingHorizontal: 5 }}
   renderItem={({ item }) => (
     <TouchableOpacity
       onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)}
@@ -57,10 +57,10 @@ const HomeScreen = () => {
   numColumns={2}
   keyExtractor={(item) => item.id.toString()}
   showsVerticalScrollIndicator={false}
-  contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 12 }}
+  contentContainerStyle={{ paddingHorizontal: 5 }}
   columnWrapperStyle={{
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: 8,
   }}
   renderItem={({ item }) => (
     <TouchableOpacity

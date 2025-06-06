@@ -1,20 +1,18 @@
 import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
     container:{
-    flex:1,
-    backgroundColor:"#fff"
+        flex:1,
+        backgroundColor:"#fff"
     },
     profile:{
         width:37,
         height:37,
         borderRadius:18.5,
-       
     },
     location:{
         flexDirection: "row",
         alignItems: "center",  
         gap: 8,
-       
     },
     headers:{
         flexDirection: "row",
@@ -30,19 +28,19 @@ export const styles = StyleSheet.create({
         marginLeft:10
     },
     pageContent:{
-        // paddingHorizontal:25
-        marginLeft:15
+        flex: 1,
+        paddingHorizontal: 10
     },
     subHeading:{
         marginTop:15,
         fontFamily:"Montserrat_600SemiBold",
         fontWeight:"bold",
-        marginLeft:15
+        marginLeft:5
     },
     specialOffers:{
-         flexDirection: 'row',
-          flexWrap: 'wrap', 
-          justifyContent: 'space-between'
+        flexDirection: 'row',
+        flexWrap: 'wrap', 
+        justifyContent: 'space-between'
     },
     footer:{
         alignItems:"center",
@@ -53,8 +51,5 @@ export const styles = StyleSheet.create({
     footertext:{
         color:"#ffffff",
         fontFamily:"Montserrat_500Medium",
-        
     }
-    
-    
 })
