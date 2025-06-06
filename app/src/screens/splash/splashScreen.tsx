@@ -1,19 +1,33 @@
 import { Text } from '@react-navigation/elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { Image, ImageBackground, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Image, ImageBackground, View } from 'react-native';
+import { useAuth } from '../../auth/authContext';
 import { styles } from './splashScreen.styles';
 
 const SplashScreen = () => {
   const router = useRouter();
-  
-  const handlePress = () => {
-    router.replace('/(tabs)/home');
-  }
+  const { checkAuth } = useAuth();
+
+  useEffect(() => {
+    const userAuth = async () => {
+      const isAuthenticated = await checkAuth();
+      if (isAuthenticated) {
+        router.replace("/(tabs)/home");
+      } else {
+        router.replace("/src/screens/login/Login");
+      }
+    }
+
+    const timeout = setTimeout(() => {
+      userAuth();
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.container}>
+    <View style={styles.container}>
       <LinearGradient
         colors={['#D7A870', '#B08149']}
         style={styles.gradient}
@@ -23,7 +37,6 @@ const SplashScreen = () => {
         <ImageBackground
           source={require('../../../../assets/images/splash.png')}
           style={styles.splashImage}
-          // resizeMode="cover"
         >
           <Image
             source={require('../../../../assets/images/cover-img.png')}
@@ -37,7 +50,7 @@ const SplashScreen = () => {
           </View>
         </ImageBackground>
       </LinearGradient>
-    </TouchableOpacity>
+    </View>
   );
 };
 
