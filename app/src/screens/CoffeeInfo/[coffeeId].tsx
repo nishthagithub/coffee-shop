@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { toggleFavourite } from '../../redux/favouriteSlice';
+import { addToCart } from '../../redux/cartSlice';
 
 const CoffeeInfo = () => {
   const { coffeeId } = useLocalSearchParams();
@@ -113,7 +114,20 @@ const isFavourite = favourites.some(item => item.id === coffee?.id);
         <Text style={styles.heading} >About</Text>
         <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rerum iusto, ipsa ipsam animi illo dolor expedita modi repudiandae nemo, corrupti praesentium quo. Possimus at non enim asperiores quis inventore sequi!...<Text style={styles.subText2}>Read More</Text></Text>
         </View>
-        <CustomButton title='Add to Cart |' price={selectedPrice}/>
+        <CustomButton title='Add to Cart |'
+         price={selectedPrice}
+         onPress={()=>{
+          if(coffee){
+            dispatch(addToCart({
+              ...coffee,
+              selectedSize,
+              selectedSugar,
+              price:selectedPrice,
+              quantity: 1,
+            }))
+          }
+         }}
+         />
       </SafeAreaView>
     </SafeAreaProvider>
 

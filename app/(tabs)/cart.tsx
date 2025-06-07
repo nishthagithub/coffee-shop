@@ -4,9 +4,9 @@ import Cart from '../src/screens/Cart/Cart'
 
 const cart = () => {
   return (
-    <View>
+    
      <Cart/>
-    </View>
+    
   )
 }
 
