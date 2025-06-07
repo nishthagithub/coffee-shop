@@ -38,6 +38,7 @@ const HomeScreen = () => {
       onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)}
     >
       <Card
+      id={item.id}
         title={item.title}
         imageUrl={item.imageUrl}
         hasSugar={item.hasSugar}
@@ -68,6 +69,7 @@ const HomeScreen = () => {
       style={{ flex: 1 }}
     >
       <Card
+      id={item.id}
         title={item.title}
         imageUrl={item.imageUrl}
         hasSugar={item.hasSugar}

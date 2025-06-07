@@ -7,6 +7,9 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import coffeeProducts from '../../data/dummyData';
 import { styles } from "./Coffee.styles";
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { toggleFavourite } from '../../redux/favouriteSlice';
 
 const CoffeeInfo = () => {
   const { coffeeId } = useLocalSearchParams();
@@ -16,6 +19,9 @@ const CoffeeInfo = () => {
     coffee?.hasSugar ? 'Medium' : 'No Sugar'
   );
 
+  const dispatch = useDispatch();
+const favourites = useSelector((state: RootState) => state.favourites.items);
+const isFavourite = favourites.some(item => item.id === coffee?.id);
   const selectedPrice =  coffee?.cupSizes[selectedSize] ?? 0;
   return (
     <SafeAreaProvider>
@@ -28,9 +34,16 @@ const CoffeeInfo = () => {
             <TouchableOpacity style={styles.icon} onPress={()=>router.push("/(tabs)/home")} >
             <Ionicons name='chevron-back' size={30} color="#00582F" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.icon} onPress={()=>router.push("/(tabs)/favourites")} >
-            <Ionicons name='heart-outline' size={25} color="#00582F" />
-            </TouchableOpacity>
+            <TouchableOpacity
+  style={styles.icon}
+  onPress={() => {
+    if (coffee) {
+      dispatch(toggleFavourite(coffee));
+    }
+  }}
+>
+  <Ionicons name={isFavourite ? 'heart' : 'heart-outline'} size={25} color="#FF4848" />
+</TouchableOpacity>
             </View>
           </View>
           <Text style={styles.text}>{coffee?.title}</Text>

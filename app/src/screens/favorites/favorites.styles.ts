@@ -1,11 +1,14 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+    
     subHeading:{
         marginTop:15,
         fontFamily:"Montserrat_600SemiBold",
         fontWeight:"bold",
-        fontSize:20
+        fontSize:20,
+        marginLeft:25
+       
     },
     specialOffers:{
          flexDirection: 'row',
