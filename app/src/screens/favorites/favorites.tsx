@@ -1,12 +1,10 @@
 import Card from '@/components/card/card';
-import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import coffeeProducts from '../../data/dummyData';
-import { styles } from './favorites.styles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { styles } from './favorites.styles';
 
 const Favorites = () => {
   const favourites = useSelector((state: RootState) => state.favourites.items);
@@ -23,6 +21,7 @@ const Favorites = () => {
             <Text style={styles.subHeading}>Favourites</Text>
             <View style={styles.specialOffers}>
               <FlatList
+              scrollEnabled={true}
                 data={favourites}
                 numColumns={2}
                 keyExtractor={(item) => item.id}

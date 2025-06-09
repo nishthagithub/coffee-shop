@@ -10,6 +10,7 @@ export interface CartItem {
   selectedSize: CupSize;
   selectedSugar: string;
   quantity: number;
+  hasSugar: boolean;
 }
 
 interface CartState {

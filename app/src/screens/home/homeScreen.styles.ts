@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
         fontSize:14,
         fontFamily:"Montserrat_600SemiBold",
         fontWeight:"700",
-        marginLeft:10
+        marginLeft:4
     },
     pageContent:{
         flex: 1,
