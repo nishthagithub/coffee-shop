@@ -1,9 +1,10 @@
 import { CupSize } from "@/components/card/card.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ImageSourcePropType } from "react-native";
 
 export interface CartItem {
   id: string;
-  imageUrl: any;
+  imageUrl: ImageSourcePropType;
   title: string;
   price: number;
   selectedSize: CupSize;
@@ -39,8 +40,36 @@ const cartSlice = createSlice({
     removeFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
+    increment:(state,action:PayloadAction<{id:string,selectedSugar: string,selectedSize:CupSize}>)=>{
+      const item = state.items.find((item) => 
+        item.id === action.payload.id &&
+        item.selectedSize === action.payload.selectedSize &&
+        item.selectedSugar === action.payload.selectedSugar
+      );
+      if(item){
+        item.quantity += 1;
+      }
+    },
+    decrement:(state,action:PayloadAction<{id:string,selectedSugar: string,selectedSize:CupSize}>)=>{
+      const item = state.items.find((item) => 
+        item.id === action.payload.id &&
+        item.selectedSize === action.payload.selectedSize &&
+        item.selectedSugar === action.payload.selectedSugar
+      );
+      if(item){
+        if(item.quantity > 1) {
+          item.quantity -= 1;
+        } else {
+          state.items = state.items.filter((i) => 
+            !(i.id === item.id && 
+              i.selectedSize === item.selectedSize && 
+              i.selectedSugar === item.selectedSugar)
+          );
+        }
+      }
+    }
   }
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, increment, decrement } = cartSlice.actions;
 export default cartSlice.reducer;

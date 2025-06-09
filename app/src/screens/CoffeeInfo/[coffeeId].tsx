@@ -1,20 +1,21 @@
 import { CupSize } from '@/components/card/card.types';
 import CustomButton from '@/components/customButton/CustomButton';
+import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import coffeeProducts from '../../data/dummyData';
-import { styles } from "./Coffee.styles";
-import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import coffeeProducts from '../../data/dummyData';
+import { addToCart, decrement, increment } from '../../redux/cartSlice';
 import { toggleFavourite } from '../../redux/favouriteSlice';
-import { addToCart } from '../../redux/cartSlice';
+import { RootState } from '../../redux/store';
+import { styles } from "./Coffee.styles";
 
 const CoffeeInfo = () => {
   const { coffeeId } = useLocalSearchParams();
   const coffee = coffeeProducts.find((item) => item.id === coffeeId);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   const [selectedSize, setSelectedSize] = useState<CupSize>(coffee?.defaultSize || 'small');
   const [selectedSugar, setSelectedSugar] = useState(
     coffee?.hasSugar ? 'Medium' : 'No Sugar'
@@ -24,6 +25,14 @@ const CoffeeInfo = () => {
 const favourites = useSelector((state: RootState) => state.favourites.items);
 const isFavourite = favourites.some(item => item.id === coffee?.id);
   const selectedPrice =  coffee?.cupSizes[selectedSize] ?? 0;
+
+  // Find if the current coffee is in cart
+  const cartItem = cartItems.find(
+    item => item.id === coffeeId && 
+    item.selectedSize === selectedSize && 
+    item.selectedSugar === selectedSugar
+  );
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -114,7 +123,7 @@ const isFavourite = favourites.some(item => item.id === coffee?.id);
         <Text style={styles.heading} >About</Text>
         <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rerum iusto, ipsa ipsam animi illo dolor expedita modi repudiandae nemo, corrupti praesentium quo. Possimus at non enim asperiores quis inventore sequi!...<Text style={styles.subText2}>Read More</Text></Text>
         </View>
-        <CustomButton title='Add to Cart |'
+        {/* <CustomButton title='Add to Cart |'
          price={selectedPrice}
          onPress={()=>{
           if(coffee){
@@ -127,7 +136,69 @@ const isFavourite = favourites.some(item => item.id === coffee?.id);
             }))
           }
          }}
-         />
+         /> */}
+         {cartItem ? (
+  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 20, marginTop: 10 }}>
+    <TouchableOpacity
+      onPress={() => {
+        if (coffee) {
+          dispatch(decrement({
+            id: coffee.id,
+            selectedSize,
+            selectedSugar
+          }));
+        }
+      }}
+      style={{
+        backgroundColor: '#eee',
+        padding: 10,
+        borderRadius: 8,
+      }}
+    >
+      <Text style={{ fontSize: 18 }}>➖</Text>
+    </TouchableOpacity>
+
+    <Text style={{ fontSize: 18, marginHorizontal: 20 }}>
+      {cartItem.quantity}
+    </Text>
+
+    <TouchableOpacity
+      onPress={() => {
+        if (coffee) {
+          dispatch(increment({
+            id: coffee.id,
+            selectedSize,
+            selectedSugar
+          }));
+        }
+      }}
+      style={{
+        backgroundColor: '#eee',
+        padding: 10,
+        borderRadius: 8,
+      }}
+    >
+      <Text style={{ fontSize: 18 }}>➕</Text>
+    </TouchableOpacity>
+  </View>
+) : (
+  <CustomButton
+    title='Add to Cart |'
+    price={selectedPrice}
+    onPress={() => {
+      if (coffee) {
+        dispatch(addToCart({
+          ...coffee,
+          selectedSize,
+          selectedSugar,
+          price: selectedPrice,
+          quantity: 1,
+        }));
+      }
+    }}
+  />
+)}
+
       </SafeAreaView>
     </SafeAreaProvider>
 

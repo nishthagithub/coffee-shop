@@ -19,15 +19,11 @@ content:{
 },
 card:{
     borderRadius: 12,
-    width: '90%',
+    width: '97%',
     backgroundColor: '#fff',
-    padding: 16,
+    padding: 8,
     marginBottom: 16,
     elevation:4,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 4
 },
 cardTop: {
     flexDirection: 'row',
@@ -49,18 +45,26 @@ cardTop: {
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666',
     marginBottom: 4,
   },
   price: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#333',
     fontWeight: 'bold',
   },
   tagsContainer: {
+    flexDirection:"row",
+    justifyContent: 'space-between', // This ensures spacing
+  alignItems: 'center',
     marginTop: 12,
-    gap:8
+  },
+  tags:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginLeft: 'auto',
   },
   tag: {
     color:"#686868",
@@ -70,6 +74,10 @@ cardTop: {
     color:"#686868",
     fontSize:14,
     fontWeight: '500',
+  },
+  tagfont:{
+  fontSize:18,
+  fontWeight:500
   },
   priceSummary: {
     marginTop: 24,
@@ -94,23 +102,11 @@ cardTop: {
     justifyContent:"space-between",
     marginTop:12,
     paddingTop:12,
-    borderTopWidth:1,
-    borderTopColor: '#eee'
   },
-  payment: {
-    marginTop: 24,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  paymentText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333'
-  },
-  paymentMethod: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
+  
+  cards:{
+    marginTop:10,
+    flexDirection:"row",
+    gap:18
   }
 })

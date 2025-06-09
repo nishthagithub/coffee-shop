@@ -10,7 +10,7 @@ const profile = () => {
   const {logout,user} =useAuth();
   const handleLogout =async()=>{
     await logout();
-    router.push("/src/screens/login/Login")
+    router.replace("/src/screens/login/Login")
   }
   return (
     <View style={{flex:1}}>
