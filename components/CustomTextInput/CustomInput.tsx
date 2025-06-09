@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { TextInput, TextInputProps, } from 'react-native-paper'
 
 
 interface customInputProps extends TextInputProps{
     hidePassword?:boolean,
-    customStyle?:StyleProp<ViewStyle>
+    customStyle?:StyleProp<ViewStyle>,
+    errorMessage?: string
 }
 
 const CustomInput:
@@ -15,10 +16,10 @@ React.FC<customInputProps> = ({
     hidePassword=false,
     value,
     customStyle,
+    errorMessage,
     ...props
-
 }) => {
-    const [isPasswordVisible, setIsPasswordVisible] = useState(!hidePassword);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isFocused,setIsFocused] =useState(false)
 
   const togglePasswordVisibility = () => {
@@ -28,14 +29,17 @@ React.FC<customInputProps> = ({
     <View style={customStyle}>
       <TextInput
        mode='flat'
-       secureTextEntry={!isPasswordVisible && hidePassword}
+       secureTextEntry={hidePassword && !isPasswordVisible }
        underlineColor="#E2E2E2"
+       
         activeUnderlineColor={isFocused?"#80A896":"#E2E2E2"}
         dense={true}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onChangeText={onChangeText}
         value={value}
+        label={label}
+        error={!!errorMessage}
         right={
           hidePassword ? (
             <TextInput.Icon
@@ -44,18 +48,18 @@ React.FC<customInputProps> = ({
             />
           ) : null
         }
-          style={[styles.input, props.style]}
+          style={[props.style]}
         {...props}
-
       />
+      {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
     </View>
   )
 }
 
 export default CustomInput
 const styles = StyleSheet.create({
-  input: {
-  
-  },
+ error:{
+  color: "red", fontSize: 12, marginTop: 4
+ }
 });
 

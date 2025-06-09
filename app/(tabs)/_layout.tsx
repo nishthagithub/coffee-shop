@@ -17,8 +17,10 @@ const _layout = () => {
          top:"40%",
          
         }, 
+        
         headerShown:false
       }}
+      
     >
       <Tabs.Screen
         name="home"

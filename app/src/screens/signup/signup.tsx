@@ -16,7 +16,7 @@ const signup = () => {
      const {signup}= useAuth()
       const signupSchema= Yup.object().shape({
         username:Yup.string().required("username is required"),
-        email: Yup.string().required('Email is required'),
+        email: Yup.string().email("Incorrect Format").required('Email is required'),
         password: Yup.string().min(4, 'Too short').required('Password is required'),
       })
   return (
@@ -44,47 +44,50 @@ const signup = () => {
         validateOnMount={false}
         >
           {({ handleChange,handleBlur, handleSubmit, values, errors, touched }) => {
-            // console.log('Current form values:', values);
-            // console.log('Validation errors:', errors);
-            // console.log('Touched fields:', touched);
+            
             return (
               <>
                 <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Username</Text>
+                  
                   <CustomInput 
+                  label={"Username"}
                     style={styles.input} 
                     placeholder="Enter your Username" 
                     onChangeText={handleChange('username')}
                     onBlur={handleBlur('username')}
                     value={values.username}
+                    errorMessage={touched.username && errors.username?errors.username:undefined}
                   />
-                  {touched.username && errors.username && <Text>{errors.username}</Text>}
+                 
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Email</Text>
+                  
                   <CustomInput 
                     style={styles.input} 
+                    label={"Email"}
                     placeholder="Enter your email" 
                     onChangeText={handleChange('email')}
                     onBlur={handleBlur('email')}
                     value={values.email}
+                    errorMessage={touched.email&& errors.email?errors.email:undefined}
                   />
-                  {touched.email && errors.email && <Text>{errors.email}</Text>}
+                  
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Password</Text>
+                 
                   <CustomInput
                     style={styles.input}
+                    label={"Password"}
                     placeholder="Enter your password"
-                    secureTextEntry
                     hidePassword
                     onChangeText={handleChange('password')}
                     onBlur={handleBlur('password')}
                     value={values.password}
+                    errorMessage={touched.password && errors.password? errors.password:undefined}
                   />
-                  {touched.password && errors.password && <Text>{errors.password}</Text>}
+                  
                 </View>
                 
                 <Text>By continuing you agree to our <Text style={styles.text}>Terms of Service {""}</Text>

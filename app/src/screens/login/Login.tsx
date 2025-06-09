@@ -10,9 +10,7 @@ import { useAuth } from '../../auth/authContext'
 import { styles } from "./login.styles"
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    
-    .required('Email is required'),
+  email: Yup.string().email("Invalid Format").required('Email is required'),
   password: Yup.string()
     .min(4, 'Too short')
     .required('Password is required'),
@@ -54,36 +52,37 @@ const Login = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ handleChange, handleSubmit, values, errors, touched }) => (
+            {({ handleChange, handleSubmit, handleBlur,values, errors, touched }) => (
               <>
                 <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Email</Text>
+             
                   <CustomInput 
                     style={styles.input} 
+                    label={"Email"}
                     placeholder="Enter your email"
                     onChangeText={handleChange('email')}
+                    onBlur={handleBlur("email")}
                     value={values.email}
+                    errorMessage={touched.email && errors.email ? errors.email : undefined}
                     keyboardType="email-address"
                     autoCapitalize="none"
                   />
-                  {touched.email && errors.email && (
-                    <Text style={styles.errorText}>{errors.email}</Text>
-                  )}
+                 
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Password</Text>
+                  
                   <CustomInput
+                  label={"Password"}
                     style={styles.input}
                     placeholder="Enter your password"
                     onChangeText={handleChange('password')}
+                    onBlur={handleBlur("password")}
                     value={values.password}
-                    secureTextEntry
+                    errorMessage={touched.password && errors.password ? errors.password:undefined}
                     hidePassword
                   />
-                  {touched.password && errors.password && (
-                    <Text style={styles.errorText}>{errors.password}</Text>
-                  )}
+                 
                 </View>
 
                 <Text style={styles.text}>Forget Password ?</Text>
