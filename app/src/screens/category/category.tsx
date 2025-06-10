@@ -2,7 +2,7 @@ import Card from '@/components/card/card';
 import CustomButton from '@/components/customButton/CustomButton';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -25,6 +25,9 @@ const category = () => {
         setTempSelectedCategoryId(selectedCategoryId)
     }
 
+    useEffect(() => {
+        setTempSelectedCategoryId(selectedCategoryId);
+    }, [selectedCategoryId]);
 
     return (
         <SafeAreaView style={styles.container}>

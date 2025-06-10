@@ -12,9 +12,11 @@ const Favorites = () => {
 
   return (
   
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1,backgroundColor:"#fff" }}>
         {favourites.length === 0 ? (
-          <Text style={{ textAlign: 'center', marginTop: 30 }}>No Favourites Yet</Text>
+          <View style={styles.header}>
+            <Text style={styles.font}>No Favourites Yet</Text>
+          </View>
         ) : (
           <>
           <View>

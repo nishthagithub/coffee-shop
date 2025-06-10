@@ -1,7 +1,7 @@
 import { CupSize } from "@/components/card/card.types";
 import image1 from "../../../assets/images/coffee5.png";
 import image2 from "../../../assets/images/coffee4.png";
-import image5 from "../../../assets/images/black.png"
+import image5 from "../../../assets/images/black2.png"
 import { ImageSourcePropType } from "react-native";
 export type category={
   id:string,

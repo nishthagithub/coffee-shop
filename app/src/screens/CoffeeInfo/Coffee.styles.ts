@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
 
 export const styles = StyleSheet.create({
     container:{
@@ -12,12 +13,15 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#ccc',
       },
+      header:{
+height: 290
+      },
       image: {
         position: 'absolute',
-        width: "100%", // Larger than card
-        height: 400, // Larger than card
-        top: -38,    // Adjust to "slide" the image vertically
-        // left: -40,   // Adjust to "slide" the image horizontally
+        width: "100%", 
+        height: 400, 
+        top: -38,    
+      
       },
       text:{
         color:"#fff",
@@ -33,7 +37,7 @@ export const styles = StyleSheet.create({
       },
       info:{
         marginLeft:15,
-        marginTop:15,
+        marginTop:20,
         marginRight:10
       },
       cupSizesContainer: {
@@ -81,6 +85,12 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginRight:10
+      },
+      headerContainer:{
+        flexDirection: "row", justifyContent: "space-between", alignItems: "center"
+      },
+      iconConatiner:{
+        width: 77, backgroundColor: "#C1925B", flexDirection: "row", gap: 3, padding: 4, borderRadius: 20, alignItems: "center", justifyContent: "center", marginRight: 10 
       }
       
 })
