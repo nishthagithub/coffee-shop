@@ -26,10 +26,11 @@ const Favorites = () => {
                 numColumns={2}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ paddingHorizontal: 5 }}
-                columnWrapperStyle={{
-                  justifyContent: 'space-evenly',
-                  marginBottom: 8,
-                }}
+                columnWrapperStyle={
+                  favourites.length === 1
+                    ? { justifyContent: 'flex-start', marginBottom: 8,marginLeft:15}
+                    : { justifyContent: 'space-evenly', marginBottom: 8 }
+                }
                 renderItem={({ item }) => (
                   <Card
                     {...item}
