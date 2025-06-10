@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
         marginTop:15,
         fontFamily:"Montserrat_600SemiBold",
         fontWeight:"bold",
+        fontSize:18,
         marginLeft:5
     },
     specialOffers:{

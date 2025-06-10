@@ -8,9 +8,10 @@ export const styles = StyleSheet.create({
     
 },
 font:{
- fontSize:20,
+ fontSize:18,
 fontWeight:500,
-marginBottom:16
+marginBottom:16,
+marginTop:10
 },
 content:{
     marginLeft:25,
@@ -27,7 +28,9 @@ card:{
 },
 cardTop: {
     flexDirection: 'row',
-    gap:16
+    gap: 16,
+    alignItems: 'flex-start',
+    justifyContent: 'space-between'
   },
   image: {
     width: 144,

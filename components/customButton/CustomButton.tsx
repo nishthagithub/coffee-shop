@@ -1,9 +1,9 @@
 
 import React from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle,Text, TouchableOpacity, TextStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewStyle,Text, TouchableOpacity, TextStyle, TouchableOpacityProps } from 'react-native'
 
 
-interface customBtn {
+interface customBtn extends TouchableOpacityProps {
     title:string,
     onPress?:()=>void,
     buttonStyle?:StyleProp<ViewStyle>,
@@ -11,10 +11,10 @@ interface customBtn {
     price?:number
 }
 
-const CustomButton:React.FC<customBtn> = ({title,buttonStyle,onPress,textStyle,price}) => {
+const CustomButton:React.FC<customBtn> = ({title,buttonStyle,onPress,textStyle,price,...props}) => {
   return (
    <View style={styles.container}>
-    <TouchableOpacity style={[styles.button,buttonStyle]} onPress={onPress}>
+    <TouchableOpacity style={[styles.button,buttonStyle]} onPress={onPress} {...props}>
       <View style={{flexDirection:"row"}}>
 
          <Text style={[styles.text, textStyle]}>{title}</Text>
@@ -22,9 +22,11 @@ const CustomButton:React.FC<customBtn> = ({title,buttonStyle,onPress,textStyle,p
           <Text style={{color:"#fff"}}> ₹{price}</Text>
         )}
       </View>
-
+    
     </TouchableOpacity>
     </View>
+
+
     
   )
 }

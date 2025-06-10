@@ -4,12 +4,12 @@ import React from 'react'
 import { FlatList, Image, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
+import Card2 from "../../../../assets/icons/card2.svg"
+import Card3 from "../../../../assets/icons/card3.svg"
+import Card1 from "../../../../assets/icons/visa.svg"
 import { decrement, increment } from '../../redux/cartSlice'
 import { RootState } from '../../redux/store'
 import { styles } from "./Cart.styles"
-import Card1 from "../../../../assets/icons/visa.svg"
-import Card2 from "../../../../assets/icons/card2.svg"
-import Card3 from "../../../../assets/icons/card3.svg"
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -25,12 +25,12 @@ const Cart = () => {
       <View style={styles.card}>
         <View style={styles.cardTop}>
           <Image source={item.imageUrl} style={styles.image} />
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.subtitle}>{item.hasSugar?"With Sugar":"Without Sugar"}</Text>
             <Text style={styles.price}>Rs. {item.price}</Text>
           </View>
-          <View>
+          <View style={{ justifyContent: 'flex-start' }}>
             <Ionicons 
               name={isFavourite ? 'heart' : 'heart-outline'} 
               size={17} 

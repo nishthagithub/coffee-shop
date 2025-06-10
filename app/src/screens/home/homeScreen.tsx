@@ -20,6 +20,7 @@ const HomeScreen = () => {
           </View>
           <Ionicons name="notifications-outline" size={24} />
         </View>
+        <View>
         <ScrollView contentContainerStyle={{ paddingHorizontal: 8 }}>
           <View style={styles.pageContent} >
             <Text style={styles.text}>Good Morning, User</Text>
@@ -55,7 +56,7 @@ const HomeScreen = () => {
                   data={coffeeProducts}
                   numColumns={2}
                   keyExtractor={(item) => item.id}
-                  contentContainerStyle={{ gap: 8, paddingHorizontal: 5, }}
+                  contentContainerStyle={{ gap: 8, paddingHorizontal: 5,paddingBottom:25 }}
                   columnWrapperStyle={{
                     justifyContent: 'space-between',
                     marginBottom: 8,
@@ -63,6 +64,7 @@ const HomeScreen = () => {
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)}
+                     
                     >
                       <Card
                         {...item}
@@ -74,15 +76,16 @@ const HomeScreen = () => {
               </View>
             </View>
           </View>
-          <View style={styles.footer}>
+          {/* <View style={styles.footer}>
             <Text style={styles.footertext}>
               Coffee-Shop 2025 | All Rights Reserved
             </Text>
             <Text style={styles.footertext}>
               Address . Contact . Social Media
             </Text>
-          </View>
+          </View> */}
         </ScrollView>
+        </View>
 
 
       </SafeAreaView>

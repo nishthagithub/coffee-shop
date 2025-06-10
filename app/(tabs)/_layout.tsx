@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
 import React from 'react'
+import { View } from 'react-native'
 
 const _layout = () => {
   return (
+    <View style={{flex:1,backgroundColor:'white'}}>
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
@@ -11,13 +13,13 @@ const _layout = () => {
            height:99,
            borderRadius:20,
            backgroundColor: '#fff',
+
         },
         tabBarIconStyle:{
          position:"absolute",
          top:"40%",
          
         }, 
-        
         headerShown:false
       }}
       
@@ -55,6 +57,7 @@ const _layout = () => {
       <Tabs.Screen
         name="cart"
         options={{
+          // tabBarBadge:"1",
           title: "Cart",
           tabBarIcon: ({focused}) => (
           <Ionicons  name={focused ?'cart':'cart-outline'} size={31} color={focused?"#00512C":"#80A896"} />          ),
@@ -71,6 +74,7 @@ const _layout = () => {
         }}
       />
     </Tabs>
+    </View>
   )
 }
 

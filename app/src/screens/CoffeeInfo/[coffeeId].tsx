@@ -6,12 +6,12 @@ import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import Star from "../../../../assets/icons/start.svg";
 import coffeeProducts from '../../data/dummyData';
 import { addToCart, decrement, increment } from '../../redux/cartSlice';
 import { toggleFavourite } from '../../redux/favouriteSlice';
 import { RootState } from '../../redux/store';
 import { styles } from "./Coffee.styles";
-import Star from "../../../../assets/icons/start.svg"
 
 
 const CoffeeInfo = () => {
@@ -156,15 +156,11 @@ const CoffeeInfo = () => {
         {cartItem ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 20, marginTop: 10 }}>
             <TouchableOpacity
-              onPress={() => {
-                if (coffee) {
-                  dispatch(decrement({
-                    id: coffee.id,
-                    selectedSize,
-                    selectedSugar
-                  }));
-                }
-              }}
+               onPress={()=>  coffee &&   dispatch(decrement({
+                id: coffee.id,
+                selectedSize,
+                selectedSugar
+              }))}
               style={{ backgroundColor: '#eee',
                 padding: 10,
                 borderRadius: 8,}}
@@ -178,15 +174,11 @@ const CoffeeInfo = () => {
             </Text>
 
             <TouchableOpacity
-              onPress={() => {
-                if (coffee) {
-                  dispatch(increment({
-                    id: coffee.id,
-                    selectedSize,
-                    selectedSugar
-                  }));
-                }
-              }}
+            onPress={()=>  coffee &&   dispatch(increment({
+              id: coffee.id,
+              selectedSize,
+              selectedSugar
+            }))}
               style={{
                 backgroundColor: '#eee',
                 padding: 10,
@@ -200,17 +192,13 @@ const CoffeeInfo = () => {
           <CustomButton
             title='Add to Cart |'
             price={selectedPrice}
-            onPress={() => {
-              if (coffee) {
-                dispatch(addToCart({
-                  ...coffee,
-                  selectedSize,
-                  selectedSugar,
-                  price: selectedPrice,
-                  quantity: 1,
-                }));
-              }
-            }}
+            onPress={() => coffee && dispatch(addToCart({
+              ...coffee,
+              selectedSize,
+              selectedSugar,
+              price: selectedPrice,
+              quantity: 1,
+            }))}
           />
         )}
 

@@ -15,9 +15,10 @@ export const styles = StyleSheet.create({
         marginBottom: 20,
       },
       text:{
-     fontSize:16,
+     fontSize:18,
      fontWeight:500,
-     marginLeft:20
+     marginLeft:20,
+     marginTop:10
       },
     card: {
         flex: 1,

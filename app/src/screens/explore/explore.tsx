@@ -8,8 +8,6 @@ import { router } from 'expo-router';
 
 const explore = () => {
     const data = Categories;
-    // console.log(data)
-    
     const renderCard=({item}:{item: category})=>{
         return (
         <TouchableOpacity
