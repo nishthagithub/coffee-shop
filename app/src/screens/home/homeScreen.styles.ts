@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     },
     subHeading:{
         marginTop:15,
-        fontFamily:"Montserrat_600SemiBold",
+        fontFamily:"Montserrat_SemiBold",
         fontWeight:"bold",
         fontSize:18,
         marginLeft:5
