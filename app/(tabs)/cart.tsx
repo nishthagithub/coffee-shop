@@ -5,7 +5,7 @@ import Cart from '../src/screens/Cart/Cart';
 
 
 const cart = () => {
-  const publihserKey =process.env.EXPO_PUBLIC_API_URL
+  const publihserKey =process.env.EXPO_PUBLIC_API_URL as string
   return (
     <StripeProvider publishableKey={publihserKey}>
       <Cart/>

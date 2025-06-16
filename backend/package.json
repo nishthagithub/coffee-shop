@@ -12,12 +12,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
     "react-native-dotenv": "^3.4.11",
-    "stripe": "^18.2.1"
+    "stripe": "^18.2.1",
+    "@react-native-async-storage/async-storage": "2.1.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

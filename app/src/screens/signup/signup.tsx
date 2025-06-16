@@ -1,3 +1,4 @@
+import { supabase } from "../../lib/supabase"
 import CustomButton from '@/components/customButton/CustomButton'
 import CustomInput from '@/components/CustomTextInput/CustomInput'
 import { router } from 'expo-router'
@@ -14,6 +15,25 @@ const signup = () => {
         router.replace('/src/screens/login/Login');
       }
      const {signup}= useAuth()
+     const signupp =async( email: string,
+      password: string,
+      username: string)=>{
+      const {data,error}=await supabase.auth.signUp({
+        email,
+        password,
+        options:{
+          data:{
+            username:username
+          }
+          
+        }
+      })
+      if (error) throw error;
+      if(data){
+        alert("Email has been send to mail.verify it")
+        router.replace('/src/screens/login/Login');
+      }
+     }
       const signupSchema= Yup.object().shape({
         username:Yup.string().required("username is required"),
         email: Yup.string().email("Incorrect Format").required('Email is required'),
@@ -36,7 +56,7 @@ const signup = () => {
         validationSchema={signupSchema}
         onSubmit={async (values) => {
           console.log('Form values:', values);
-          await signup(values);
+          await signupp(values.email, values.password, values.username);
           router.replace('/src/screens/login/Login');
         }}
         validateOnBlur={true}
