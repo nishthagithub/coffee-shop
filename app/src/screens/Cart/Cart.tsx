@@ -1,23 +1,72 @@
 import CustomButton from '@/components/customButton/CustomButton'
 import { Ionicons } from '@expo/vector-icons'
-import React from 'react'
+import { useStripe } from '@stripe/stripe-react-native'
+import axios from "axios"
+import { router } from 'expo-router'
+import React, { useEffect, useMemo } from 'react'
 import { FlatList, Image, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import Card2 from "../../../../assets/icons/card2.svg"
 import Card3 from "../../../../assets/icons/card3.svg"
 import Card1 from "../../../../assets/icons/visa.svg"
-import { decrement, increment } from '../../redux/cartSlice'
+import { clearCart, decrement, increment } from '../../redux/cartSlice'
 import { RootState } from '../../redux/store'
 import { styles } from "./Cart.styles"
+
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const discount = 100
-  const total = subtotal - discount;
   const favourites = useSelector((state: RootState) => state.favourites.items);
+  // console.log(cartItems)
+  const subtotal = useMemo(() => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  }, [cartItems]);
+  const discount = 50
+  const total = useMemo(() => {
+    return subtotal - discount;
+  }, [subtotal]);
+
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const payment = async(onSuccess: () => void)=>{
+
+    try {
+      const response = await axios.post("http://192.168.29.239:3000/create-paymnet",{
+        amount:Math.round(total * 100)
+      },{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      })
+      // console.log('res',JSON.stringify(response,null,2))
+      const { clientSecret } = response.data;
+      const initResult = await initPaymentSheet({
+        merchantDisplayName: 'My Coffee Shop',
+        paymentIntentClientSecret: clientSecret,
+      });
+      
+      if (initResult.error) {
+        alert(`Init error: ${initResult.error.message}`);
+        return;
+      }
+      const presentResult = await presentPaymentSheet();
+      if (presentResult.error) {
+        alert(`Payment failed: ${presentResult.error.message}`);
+        return;
+      } 
+      else{
+        alert('Payment complete!');  
+        setTimeout(()=>{
+          onSuccess();
+        },1000)
+      }
+  
+    } catch (error) {
+      alert(error)
+      console.error('Payment error:', error);
+    }
+  }
 
   const renderItem = ({ item }: any) => {
     const isFavourite = favourites.some(fav => fav.id === item.id);
@@ -101,7 +150,7 @@ const Cart = () => {
                 </View>
                 <View style={styles.total}>
                   <Text>Discount</Text>
-                  <Text>- Rs.100</Text>
+                  <Text>- Rs.50</Text>
                 </View>
                 <View style={styles.amount}>
                   <Text>Total</Text>
@@ -116,7 +165,14 @@ const Cart = () => {
                   </View>
                 </View>
                 <View style={{marginTop:10}}>
-                <CustomButton title="Buy Now" />
+                <CustomButton 
+  title="Buy Now" 
+  onPress={() => payment(() => {
+    dispatch(clearCart());
+    router.replace("/(tabs)/home");
+  })}
+/>
+
                 </View>
               </View>
             ) : null
