@@ -4,7 +4,7 @@
     "slug": "coffee-shop",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon1.png",
     "scheme": "coffeeshop",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,15 +12,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/images/icon1.png"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/coffee5.png",
         "backgroundColor": "#ffffff"
       },
+      "icon": "./assets/images/icon1.png",
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.coffeeshop"
+      "package": "com.anonymous.coffeeshop",
+      "googleServicesFile": "android/app/google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -32,16 +35,24 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
+          
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "447f1446-01ba-4192-b12e-a5c33adc3dd8"
+      }
+    },
+    "owner": "nishthaa07"
   }
 }
