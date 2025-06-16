@@ -2,8 +2,11 @@ import { Ionicons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
 import React from 'react'
 import { View } from 'react-native'
+import { useSelector } from 'react-redux'
+import { selectCartItemsCount } from '../src/redux/cartSlice'
 
 const _layout = () => {
+  const cartQuantity=useSelector(selectCartItemsCount)
   return (
     <View style={{flex:1,backgroundColor:'white'}}>
     <Tabs
@@ -57,7 +60,7 @@ const _layout = () => {
       <Tabs.Screen
         name="cart"
         options={{
-          // tabBarBadge:"1",
+          tabBarBadge: cartQuantity > 0 ? cartQuantity : undefined,
           title: "Cart",
           tabBarIcon: ({focused}) => (
           <Ionicons  name={focused ?'cart':'cart-outline'} size={31} color={focused?"#00512C":"#80A896"} />          ),

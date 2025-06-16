@@ -68,9 +68,16 @@ const cartSlice = createSlice({
           );
         }
       }
+    },
+    clearCart:(state)=>{
+     state.items=[];
     }
   }
 });
 
-export const { addToCart, removeFromCart, increment, decrement } = cartSlice.actions;
+export const { addToCart, removeFromCart, increment, decrement, clearCart } = cartSlice.actions;
+
+// Selector to get total number of items
+export const selectCartItemsCount = (state: { cart: CartState }) => state.cart.items.length;
+
 export default cartSlice.reducer;

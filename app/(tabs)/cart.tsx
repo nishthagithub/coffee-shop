@@ -1,11 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Cart from '../src/screens/Cart/Cart'
+import { StripeProvider } from '@stripe/stripe-react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import Cart from '../src/screens/Cart/Cart';
+
 
 const cart = () => {
+  const publihserKey =process.env.EXPO_PUBLIC_API_URL
   return (
-    
-     <Cart/>
+    <StripeProvider publishableKey={publihserKey}>
+      <Cart/>
+    </StripeProvider>
     
   )
 }

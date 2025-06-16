@@ -12,4 +12,7 @@ config.resolver.sourceExts.push("svg");
 config.resolver.sourceExts = [...config.resolver.sourceExts, 'mjs', 'cjs'];
 config.resolver.assetExts = [...config.resolver.assetExts, 'png', 'jpg', 'jpeg', 'gif', 'webp'];
 
+// This is the new line you should add in, after the previous lines
+config.resolver.unstable_enablePackageExports = false;
+
 module.exports = config;
