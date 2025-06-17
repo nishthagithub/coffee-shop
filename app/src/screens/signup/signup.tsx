@@ -9,31 +9,15 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import * as Yup from 'yup'
 import { useAuth } from '../../auth/authContext'
 import { styles } from "./signup.styles"
+import { signupp } from "../../auth/supabaseAuth"
+
 
 const signup = () => {
     const handlePress=()=>{
         router.replace('/src/screens/login/Login');
       }
-     const {signup}= useAuth()
-     const signupp =async( email: string,
-      password: string,
-      username: string)=>{
-      const {data,error}=await supabase.auth.signUp({
-        email,
-        password,
-        options:{
-          data:{
-            username:username
-          }
-          
-        }
-      })
-      if (error) throw error;
-      if(data){
-        alert("Email has been send to mail.verify it")
-        router.replace('/src/screens/login/Login');
-      }
-     }
+    //  const {signup}= useAuth()
+   
       const signupSchema= Yup.object().shape({
         username:Yup.string().required("username is required"),
         email: Yup.string().email("Incorrect Format").required('Email is required'),
@@ -55,9 +39,9 @@ const signup = () => {
         initialValues={{ username: '', email: '', password: '' }}
         validationSchema={signupSchema}
         onSubmit={async (values) => {
-          console.log('Form values:', values);
+          // console.log('Form values:', values);
           await signupp(values.email, values.password, values.username);
-          router.replace('/src/screens/login/Login');
+          // router.push("/(tabs)/home");
         }}
         validateOnBlur={true}
         validateOnChange={true}

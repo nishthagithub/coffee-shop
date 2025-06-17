@@ -8,6 +8,8 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import * as Yup from 'yup'
 import { useAuth } from '../../auth/authContext'
 import { styles } from "./login.styles"
+import { supabase } from '../../lib/supabase'
+import { loginn } from '../../auth/supabaseAuth'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Format").required('Email is required'),
@@ -20,14 +22,14 @@ const Login = () => {
   const handlePress = () => {
     router.replace('/src/screens/signup/signup');
   }
-  const {login,user} = useAuth()
-
+  // const {login,user} = useAuth()
+  
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
-      const success = await login(values.email, values.password);
+      const success = await loginn(values.email, values.password);
       if (success) {
         router.push("/(tabs)/home");
-        console.log(user)
+        // console.log(user)
       } else {
         alert("Invalid Credentials");
       }

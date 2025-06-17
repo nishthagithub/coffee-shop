@@ -5,14 +5,15 @@ import React, { useEffect } from 'react';
 import { Image, ImageBackground, View } from 'react-native';
 import { useAuth } from '../../auth/authContext';
 import { styles } from './splashScreen.styles';
+import { getCurrentUser } from '../../auth/supabaseAuth';
 
 const SplashScreen = () => {
   const router = useRouter();
-  const { checkAuth } = useAuth();
+  // const { checkAuth } = useAuth();
 
   useEffect(() => {
     const userAuth = async () => {
-      const isAuthenticated = await checkAuth();
+      const isAuthenticated = await getCurrentUser();
       if (isAuthenticated) {
         router.replace("/(tabs)/home");
       } else {
