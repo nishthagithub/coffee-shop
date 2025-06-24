@@ -2,11 +2,11 @@ import CustomButton from '@/components/customButton/CustomButton'
 import CustomInput from '@/components/CustomTextInput/CustomInput'
 import { router } from 'expo-router'
 import { Formik } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
 import { Alert, Image, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import * as Yup from 'yup'
-import { signupp } from "../../auth/supabaseAuth"
+import { addUserToDatabase, checkUserExists, signupp } from "../../auth/supabaseAuth"
 import { styles } from "./signup.styles"
 
 
@@ -14,13 +14,55 @@ const signup = () => {
     const handlePress=()=>{
         router.replace('/src/screens/login/Login');
       }
-    //  const {signup}= useAuth()
-   
-      const signupSchema= Yup.object().shape({
+      const [loading, setLoading] = useState(false);
+
+    // New function to handle signup logic
+    const handleSignup = async (values: { email: string; password: string; username: string }) => {
+      setLoading(true);
+      try {
+        const userExists = await checkUserExists(values.email);
+        console.log('Checking if user exists for email:', values.email);
+      if (userExists) {
+        console.log(userExists)
+        Alert.alert("User Already Exists", "An account with this email already exists.");
+        setLoading(false);
+        return;
+      }
+      const result = await signupp(values.email, values.password, values.username);
+      
+      if (result.success) {
+        
+        Alert.alert(
+          "OTP Sent",
+          `An OTP has been sent to ${values.email}`,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                router.push({
+                  pathname: '/src/screens/signup/verifyOtp',
+                  params: { email: values.email }
+                });
+              }
+            }
+          ]
+        );
+      } else {
+        Alert.alert("Signup Failed", result.message || "Unknown error");
+      }
+      } catch (error) {
+        console.error("Signup error:", error);
+    Alert.alert("Error", "Something went wrong.");
+      }
+      
+      setLoading(false)
+    };
+
+    const signupSchema= Yup.object().shape({
         username:Yup.string().required("username is required"),
         email: Yup.string().email("Incorrect Format").required('Email is required'),
         password: Yup.string().min(4, 'Too short').required('Password is required'),
-      })
+    })
   return (
     <SafeAreaProvider>
     <SafeAreaView style={styles.container}>
@@ -36,27 +78,7 @@ const signup = () => {
         <Formik   
         initialValues={{ username: '', email: '', password: '' }}
         validationSchema={signupSchema}
-        onSubmit={async (values) => {
-         const data= await signupp(values.email, values.password, values.username);
-         if(data.user){
-          Alert.alert(
-            "OTP Sent",
-            `An OTP has been sent to ${values.email}`,
-            [
-              {
-                text: "OK",
-                onPress: () => {
-                  router.push({
-                    pathname: '/src/screens/verify/Verify',
-                    params: { email: values.email }
-                  });
-                }
-              }
-            ]
-          );
-         }
-          
-        }}
+        onSubmit={handleSignup}
         validateOnBlur={true}
         validateOnChange={true}
         validateOnMount={false}
@@ -110,7 +132,7 @@ const signup = () => {
                 
                 <Text>By continuing you agree to our <Text style={styles.text}>Terms of Service {""}</Text>
                 and <Text style={styles.text}>Privacy Policy</Text></Text>
-                <CustomButton title='Submit' onPress={handleSubmit}/>
+                <CustomButton title='Submit'  onPress={handleSubmit} loading={loading}/>
                 <Text style={styles.subTextt} onPress={handlePress}>Have Account ?<Text style={styles.text}> Login</Text></Text>
               </>
             );

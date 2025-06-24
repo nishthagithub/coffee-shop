@@ -4,13 +4,24 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { supabase } from '../../lib/supabase'
-import { handleVerify } from '../../auth/supabaseAuth'
+import { addUserToDatabase, verifyOtps } from '../../auth/supabaseAuth'
 
 const verifyOtp = () => {
     const [otp, setOtp] = useState('');
+    const [loading,setLoading]=useState(false)
     const { email } = useLocalSearchParams<{ email: string }>();
     const onSubmit = async () => {
-        await handleVerify(email, otp); // <-- pass otp here
+      setLoading(true)
+       const result= await verifyOtps(email, otp); 
+       if(result.success){
+        alert("OTP verified successfully!");
+        
+        router.replace("(tabs)/home")
+       }
+       else{
+        alert(result.message || "OTP verification failed.");
+       }
+       setLoading(false)
       };
   return (
     <SafeAreaView style={styles.container}>
@@ -25,7 +36,7 @@ const verifyOtp = () => {
         onChangeText={setOtp}
         placeholder="Enter OTP"
       />
-      <CustomButton title="Verify OTP" onPress={onSubmit} />
+      <CustomButton title="Verify OTP" onPress={onSubmit} loading={loading} />
     </SafeAreaView>
   )
 }

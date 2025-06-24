@@ -8,26 +8,28 @@ interface customBtn extends TouchableOpacityProps {
     onPress?:()=>void,
     buttonStyle?:StyleProp<ViewStyle>,
     textStyle?:StyleProp<TextStyle>,
-    price?:number
+    price?:number,
+    loading?:boolean
 }
 
-const CustomButton:React.FC<customBtn> = ({title,buttonStyle,onPress,textStyle,price,...props}) => {
+const CustomButton:React.FC<customBtn> = ({title,buttonStyle,onPress,textStyle,price,loading=false,...props}) => {
   return (
    <View style={styles.container}>
-    <TouchableOpacity style={[styles.button,buttonStyle]} onPress={onPress} {...props}>
+    <TouchableOpacity style={[styles.button,buttonStyle,loading && { opacity: 0.6 }]}
+     onPress={onPress}
+     disabled={loading}
+     {...props}>
       <View style={{flexDirection:"row"}}>
 
-         <Text style={[styles.text, textStyle]}>{title}</Text>
-         {price !== undefined && (
+         <Text style={[styles.text, textStyle]}>
+         {loading ? "Loading..." : title}
+          </Text>
+         {!loading && price !== undefined && (
           <Text style={{color:"#fff"}}> ₹{price}</Text>
         )}
-      </View>
-    
+      </View> 
     </TouchableOpacity>
     </View>
-
-
-    
   )
 }
 

@@ -3,35 +3,27 @@ import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useAuth } from '../src/auth/authContext'
+import { useDispatch, useSelector } from 'react-redux'
 import ImageGallery from '../src/data/ImageGallery'
 import { supabase } from '../src/lib/supabase'
-import { getCurrentUser } from '../src/auth/supabaseAuth'
+import { AppDispatch, RootState } from '../src/redux/store'
+import { fetchUserData } from '../src/redux/userSlice'
 
 const profile = () => {
   // const { logout, user } = useAuth();
   const [showImageGallery, setShowImageGallery] = useState(false);
   const [uri, setUri] = useState<string | null>(null);
-  const [user,setUser]=useState<any>(null)
+  const dispatch = useDispatch<AppDispatch>();
 
-  const getUser=async()=>{
-    try {
-      const currentUser=await getCurrentUser();
-      setUser(currentUser)
+  const { username, email, id, loading } = useSelector((state: RootState) => state.user);
 
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  useEffect(()=>{
-    getUser()
-  },[])
-
-
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch]);
 
   const handleLogout = async () => {
+    dispatch({ type: 'user/logout' }); // Optionally handle user state reset if you have a logout action
     await supabase.auth.signOut();
-    setUser(null);
     router.replace("/src/screens/login/Login")
   }
 
@@ -42,7 +34,7 @@ const profile = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={{ flex: 1, alignItems: "center" }}>
-        {user ? (
+        {id ? (
           <>
             <TouchableOpacity onPress={() => setShowImageGallery(true)}>
               {uri ? (
@@ -65,9 +57,9 @@ const profile = () => {
             />
 
 <Text style={{ fontSize: 18, marginTop: 20, marginBottom: 10 }}>
-      Welcome, {user.user_metadata?.username || user.email}
+      Welcome, {username || "User"}
     </Text>
-            <CustomButton title="Logout" onPress={handleLogout} />
+            <CustomButton title="Logout" onPress={handleLogout} loading={loading} />
           </>
         ) : (
           <Text style={{ fontSize: 18 }}>You're not logged in.</Text>

@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useStripe } from '@stripe/stripe-react-native'
 import axios from "axios"
 import { router } from 'expo-router'
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { FlatList, Image, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
@@ -73,7 +73,15 @@ const Cart = () => {
     return (
       <View style={styles.card}>
         <View style={styles.cardTop}>
-          <Image source={item.imageUrl} style={styles.image} />
+          
+          <Image
+            source={
+              typeof item.imageUrl === 'string'
+                ? { uri: item.imageUrl }
+                : item.imageUrl
+            }
+            style={styles.image}
+          />
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.subtitle}>{item.hasSugar?"With Sugar":"Without Sugar"}</Text>
