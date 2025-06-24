@@ -2,7 +2,7 @@ import { ImageSourcePropType } from "react-native";
 export type CupSize = 'small' | 'medium' | 'large';
 export interface productCardProps {
     id: string;
-    imageUrl: ImageSourcePropType;
+    imageUrl: string;
     title: string;
     hasSugar?: boolean;
     defaultSize: CupSize;

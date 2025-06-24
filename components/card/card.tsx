@@ -17,7 +17,7 @@ const Card = ({imageUrl, title,hasSugar,defaultSize,cupSizes,showHeartIcon,id}: 
       id,
       imageUrl,
       title,
-      price:cupSizes?.[defaultSize]??0,
+      price: defaultSize && cupSizes?.[defaultSize] ? cupSizes[defaultSize] : 0,
       selectedSize:defaultSize,
       selectedSugar: hasSugar ? "Medium" : "No Sugar",
       quantity:1,
@@ -27,7 +27,7 @@ const Card = ({imageUrl, title,hasSugar,defaultSize,cupSizes,showHeartIcon,id}: 
   return (
     <View style={styles.card}>
       <Image 
-        source={imageUrl} 
+        source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl}
         style={styles.image} 
         resizeMode="cover" 
       />

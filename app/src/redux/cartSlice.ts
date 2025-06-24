@@ -4,7 +4,7 @@ import { ImageSourcePropType } from "react-native";
 
 export interface CartItem {
   id: string;
-  imageUrl: ImageSourcePropType;
+  imageUrl: string;
   title: string;
   price: number;
   selectedSize: CupSize;

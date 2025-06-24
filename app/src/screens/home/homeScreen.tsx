@@ -1,14 +1,41 @@
 import Card from '@/components/card/card';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import coffeeProducts from '../../data/dummyData';
 import { styles } from './homeScreen.styles';
+import { supabase } from '../../lib/supabase';
+import { CupSize } from '@/components/card/card.types';
+type products={
+  id: string;
+  title: string;
+  imageUrl: any;
+  hasSugar: boolean;
+  defaultSize: CupSize;
+  cupSizes: Record<CupSize, number>;
+  category_id:string
+}
 
 
 const HomeScreen = () => {
+  const [coffeeData,setCoffeeData]=useState<products[]>([])
+  const [loading,setLoading]=useState(true)
+  const fetchData=async()=>{
+    const {data,error}=await supabase.from("coffee_products").select("*")
+    if(error){
+      console.log("error",error.message)
+  }
+  else{
+    setCoffeeData(data || [])
+  }
+  setLoading(false)
+  }
+  useEffect(()=>{
+    fetchData();
+  },[])
+
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -27,7 +54,7 @@ const HomeScreen = () => {
             <Text style={styles.subHeading}>Categories</Text>
             <FlatList
               horizontal
-              data={coffeeProducts}
+              data={coffeeData}
               keyExtractor={(item) => item.id.toString()}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ gap: 8, paddingHorizontal: 5 }}
@@ -53,7 +80,7 @@ const HomeScreen = () => {
 
                 <FlatList
                   scrollEnabled={false}
-                  data={coffeeProducts}
+                  data={coffeeData}
                   numColumns={2}
                   keyExtractor={(item) => item.id}
                   contentContainerStyle={{ gap: 8, paddingHorizontal: 5,paddingBottom:25 }}

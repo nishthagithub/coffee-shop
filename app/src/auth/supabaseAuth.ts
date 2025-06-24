@@ -16,11 +16,7 @@ export const signupp =async( email: string,
     if (error){
       console.log(error)
       throw error};
-    if(data){
-      console.log(data)
-      alert("Sign up Successfully")
-    //   router.replace('/src/screens/login/Login');
-    }
+   return data;
    }
 
    export const loginn=async(email: string,password: string)=>{
@@ -45,20 +41,21 @@ export const signupp =async( email: string,
     return data.session?.user || null;
   };
 
-  export const signWithOtp=async(email: string,
-    password: string,
-    username: string)=>{
-        const {error}=await supabase.auth.signInWithOtp({
-            email,
-            options:{
-                shouldCreateUser:true,
-                data:{username:username,password:password}
-            }
-        })
-        if (error) {
-            console.error("OTP Signin error:", error.message);
-            throw error;
-          }
-          return true;
-    
-  }
+ export const handleVerify = async (email: string,otp:string) => {
+    if(!email){
+        alert("email missing");
+        return;
+    }
+    const {error}=await supabase.auth.verifyOtp({
+        email,
+        token:otp,
+        type:"email"
+    })
+    if(error){
+        alert("Invalid Otp")
+        console.log(error);
+    }
+    else{
+        router.replace("/(tabs)/home");
+    }
+}

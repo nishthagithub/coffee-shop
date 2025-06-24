@@ -1,15 +1,13 @@
-import { supabase } from "../../lib/supabase"
 import CustomButton from '@/components/customButton/CustomButton'
 import CustomInput from '@/components/CustomTextInput/CustomInput'
 import { router } from 'expo-router'
 import { Formik } from 'formik'
 import React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Alert, Image, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import * as Yup from 'yup'
-import { useAuth } from '../../auth/authContext'
-import { styles } from "./signup.styles"
 import { signupp } from "../../auth/supabaseAuth"
+import { styles } from "./signup.styles"
 
 
 const signup = () => {
@@ -39,9 +37,25 @@ const signup = () => {
         initialValues={{ username: '', email: '', password: '' }}
         validationSchema={signupSchema}
         onSubmit={async (values) => {
-          // console.log('Form values:', values);
-          await signupp(values.email, values.password, values.username);
-          // router.push("/(tabs)/home");
+         const data= await signupp(values.email, values.password, values.username);
+         if(data.user){
+          Alert.alert(
+            "OTP Sent",
+            `An OTP has been sent to ${values.email}`,
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  router.push({
+                    pathname: '/src/screens/verify/Verify',
+                    params: { email: values.email }
+                  });
+                }
+              }
+            ]
+          );
+         }
+          
         }}
         validateOnBlur={true}
         validateOnChange={true}

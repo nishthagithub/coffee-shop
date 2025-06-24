@@ -1,8 +1,11 @@
 import { CupSize } from "@/components/card/card.types";
-import image1 from "../../../assets/images/coffee5.png";
-import image2 from "../../../assets/images/coffee4.png";
-import image5 from "../../../assets/images/black2.png"
 import { ImageSourcePropType } from "react-native";
+import image5 from "../../../assets/images/black2.png";
+import image2 from "../../../assets/images/coffee4.png";
+import image1 from "../../../assets/images/coffee5.png";
+import image3 from "../../../assets/images/ice.png"
+import image4 from "../../../assets/images/icee.png"
+
 export type category={
   id:string,
   name:string,
@@ -27,7 +30,7 @@ export type category={
   {
     id: "c4",
     name: "Cold Coffee",
-    image: image1,
+    image: image3,
   },
  ]
 
@@ -39,7 +42,7 @@ const coffeeProducts:{
   hasSugar: boolean;
   defaultSize: CupSize;
   cupSizes: Record<CupSize, number>;
-  categoryId:string
+  category_id:string
 }[] = [
   {
     id: "1",
@@ -52,7 +55,7 @@ const coffeeProducts:{
       medium: 140,
       large: 160,
     },
-    categoryId:"c1"
+    category_id:"c1"
   },
   {
     id: "2",
@@ -65,7 +68,7 @@ const coffeeProducts:{
       medium: 130,
       large: 150,
     },
-    categoryId:"c1"
+    category_id:"c1"
   },
   {
     id: "3",
@@ -78,12 +81,12 @@ const coffeeProducts:{
       medium: 110,
       large: 130,
     },
-    categoryId:"c2"
+    category_id:"c2"
   },
   {
     id: "4",
     title: "Coffee",
-    imageUrl: image2,
+    imageUrl: image3,
     hasSugar: true,
     defaultSize: "small",
     cupSizes: {
@@ -91,12 +94,12 @@ const coffeeProducts:{
       medium: 100,
       large: 120,
     },
-    categoryId:"c2"
+    category_id:"c2"
   },
   {
     id: "5",
     title: "Latte",
-    imageUrl: image2,
+    imageUrl: image4,
     hasSugar: false,
     defaultSize: "small",
     cupSizes: {
@@ -104,7 +107,7 @@ const coffeeProducts:{
       medium: 160,
       large: 180,
     },
-    categoryId:"c3"
+    category_id:"c3"
   },
   {
     id: "6",
@@ -117,7 +120,7 @@ const coffeeProducts:{
       medium: 150,
       large: 170,
     },
-    categoryId:"c3"
+    category_id:"c3"
   },
   {
     id: "7",
@@ -130,7 +133,7 @@ const coffeeProducts:{
       medium: 170,
       large: 190,
     },
-    categoryId:"c4"
+    category_id:"c4"
   },
   {
     id: "8",
@@ -143,8 +146,10 @@ const coffeeProducts:{
       medium: 160,
       large: 180,
     },
-    categoryId:"c4"
+    category_id:"c4"
   },
 ];
+
+
 
 export default coffeeProducts;

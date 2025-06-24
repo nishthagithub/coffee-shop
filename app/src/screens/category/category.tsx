@@ -15,7 +15,7 @@ const category = () => {
     const { categoryId } = useLocalSearchParams();
     const [selectedCategoryId, setSelectedCategoryId] = useState(categoryId);
     const category = Categories.find(c => c.id === selectedCategoryId);
-    const filteredItems = coffeeProducts.filter(item => item.categoryId === selectedCategoryId);
+    const filteredItems = coffeeProducts.filter(item => item.category_id === selectedCategoryId);
     const bottomSheet = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ["30%", "60%", "90%"], [])
     const [tempSelectedCategoryId, setTempSelectedCategoryId] = useState(categoryId);
