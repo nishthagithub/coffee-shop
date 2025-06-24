@@ -15,14 +15,14 @@ const profile = () => {
   const [uri, setUri] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { username, email, id, loading } = useSelector((state: RootState) => state.user);
+  const { username, id, loading } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     dispatch(fetchUserData());
   }, [dispatch]);
 
   const handleLogout = async () => {
-    dispatch({ type: 'user/logout' }); // Optionally handle user state reset if you have a logout action
+    dispatch({ type: 'user/logout' }); 
     await supabase.auth.signOut();
     router.replace("/src/screens/login/Login")
   }

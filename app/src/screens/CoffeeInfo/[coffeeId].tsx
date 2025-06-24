@@ -12,6 +12,8 @@ import { addToCart, decrement, increment } from '../../redux/cartSlice';
 import { toggleFavourite } from '../../redux/favouriteSlice';
 import { RootState } from '../../redux/store';
 import { styles } from "./Coffee.styles";
+import { ActivityIndicator } from 'react-native-paper';
+import { insertIntoCart } from './coffee.function';
 
 
 const CoffeeInfo = () => {
@@ -57,6 +59,7 @@ const CoffeeInfo = () => {
   const favourites = useSelector((state: RootState) => state.favourites.items);
   const isFavourite = coffee ? favourites.some(item => item.id === coffee.id) : false;
   const selectedPrice = coffee?.cupSizes?.[selectedSize] ?? 0;
+  const {id } = useSelector((state: RootState) => state.user);
 
   const cartItem = cartItems.find(
     item => item.id === coffeeId &&
@@ -68,7 +71,9 @@ const CoffeeInfo = () => {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
-          <Text>Loading...</Text>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#000" />
+          </View>
         </SafeAreaView>
       </SafeAreaProvider>
     );
@@ -179,11 +184,38 @@ const CoffeeInfo = () => {
         {cartItem ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 20, marginTop: 10 }}>
             <TouchableOpacity
-              onPress={() => dispatch(decrement({
-                id: coffee.id,
-                selectedSize,
-                selectedSugar
-              }))}
+              onPress={async () => {
+                if (cartItem.quantity > 1) {
+                  const { error } = await supabase
+                    .from('cart')
+                    .update({ quantity: cartItem.quantity - 1 })
+                    .match({
+                      user_id: id,
+                      product_id: coffee.id,
+                      defaultSize: selectedSize,
+                      hasSugar: coffee.hasSugar,
+                    });
+                  if (error) {
+                    alert('Failed to update cart quantity.');
+                    return;
+                  }
+                } else {
+                  await supabase
+                    .from('cart')
+                    .delete()
+                    .match({
+                      user_id: id,
+                      product_id: coffee.id,
+                      defaultSize: selectedSize,
+                      hasSugar: coffee.hasSugar,
+                    });
+                }
+                dispatch(decrement({
+                  id: coffee.id,
+                  selectedSize,
+                  selectedSugar
+                }));
+              }}
               style={{ backgroundColor: '#eee', padding: 10, borderRadius: 8 }}
             >
               <Ionicons name="remove-outline" size={18} />
@@ -192,11 +224,26 @@ const CoffeeInfo = () => {
               {cartItem.quantity}
             </Text>
             <TouchableOpacity
-              onPress={() => dispatch(increment({
-                id: coffee.id,
-                selectedSize,
-                selectedSugar
-              }))}
+              onPress={async () => {
+                const { error } = await supabase
+                  .from('cart')
+                  .update({ quantity: cartItem.quantity + 1 })
+                  .match({
+                    user_id: id,
+                    product_id: coffee.id,
+                    defaultSize: selectedSize,
+                    hasSugar: coffee.hasSugar,
+                  });
+                if (error) {
+                  alert('Failed to update cart quantity.');
+                  return;
+                }
+                dispatch(increment({
+                  id: coffee.id,
+                  selectedSize,
+                  selectedSugar
+                }));
+              }}
               style={{ backgroundColor: '#eee', padding: 10, borderRadius: 8 }}
             >
               <Ionicons name='add-outline' size={18} />
@@ -206,13 +253,27 @@ const CoffeeInfo = () => {
           <CustomButton
             title='Add to Cart |'
             price={selectedPrice}
-            onPress={() => dispatch(addToCart({
+            onPress={async() =>{
+            await insertIntoCart
+                ({
+                  user_id: id,
+                  product_id: coffee.id,
+                  title: coffee.title,
+                  imageUrl: typeof coffee.imageUrl === 'string' ? coffee.imageUrl : '',
+                  hasSugar: coffee.hasSugar,
+                  defaultSize: selectedSize,
+                  category_id: coffee.category_id,
+                  quantity: 1,
+                  price: selectedPrice,
+                }
+              )
+              dispatch(addToCart({
               ...coffee,
               selectedSize,
               selectedSugar,
               price: selectedPrice,
               quantity: 1,
-            }))}
+            }))}}
           />
         )}
       </SafeAreaView>

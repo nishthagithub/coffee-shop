@@ -29,7 +29,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
  
   const username = useSelector((state: RootState) => state.user.username);
-  console.log("user",username)
+  // console.log("user",username)
   
 
   const fetchData=async()=>{
@@ -117,14 +117,6 @@ const HomeScreen = () => {
                     </View>
                   </View>
                 </View>
-                {/* <View style={styles.footer}>
-                  <Text style={styles.footertext}>
-                    Coffee-Shop 2025 | All Rights Reserved
-                  </Text>
-                  <Text style={styles.footertext}>
-                    Address . Contact . Social Media
-                  </Text>
-                </View> */}
               </ScrollView>
             </View>
           </View>
