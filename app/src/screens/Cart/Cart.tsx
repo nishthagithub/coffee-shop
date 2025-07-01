@@ -1,28 +1,102 @@
 import CustomButton from '@/components/customButton/CustomButton'
 import { Ionicons } from '@expo/vector-icons'
+import { useIsFocused } from '@react-navigation/native'
 import { useStripe } from '@stripe/stripe-react-native'
 import axios from "axios"
 import { router } from 'expo-router'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FlatList, Image, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import Card2 from "../../../../assets/icons/card2.svg"
 import Card3 from "../../../../assets/icons/card3.svg"
 import Card1 from "../../../../assets/icons/visa.svg"
-import { clearCart, decrement, increment } from '../../redux/cartSlice'
+import { supabase } from '../../lib/supabase'
+import { CartItemRedux, clearCart, decrement, increment, setCart } from '../../redux/cartSlice'
 import { RootState } from '../../redux/store'
+import { CartItem, getCartItems } from '../CoffeeInfo/coffee.function'
 import { styles } from "./Cart.styles"
 
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const userId = useSelector((state: RootState) => state.user.id);
+  // console.log(userId)
+  const cartItem = useSelector((state: RootState) => state.cart.items);
+  console.log("redux item",cartItem)
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const favourites = useSelector((state: RootState) => state.favourites.items);
+  const focused=useIsFocused()
+
+  useEffect(() => {
+    console.log('calling')
+    const fetchCart = async () => {
+      const { data, error } = await getCartItems(userId);
+   if (data) {
+    console.log('data',JSON.stringify(data,null,2))
+     const mappedCartItems = data.map(item => ({
+       id: item.coffee_products.id,
+       imageUrl: item.coffee_products.imageUrl ?? '',
+       title: item.coffee_products.title,
+       price: item.price,
+       selectedSize: item.defaultSize,
+       selectedSugar: item.selectedSugar,
+       quantity: item.quantity,
+       hasSugar: item.coffee_products.hasSugar,
+     }));
+     console.log("cartdatraaa",JSON.stringify( data,null,2))
+     dispatch(setCart(mappedCartItems));
+   } else { 
+        console.error(error);
+      }
+    };
+    fetchCart();
+  }, [focused]);
+
+  useEffect(()=>{
+console.log('cartItem',JSON.stringify(cartItem,null,2))
+  },[cartItem])
+  
+  const handleIncrement = async (cartItem : CartItemRedux) => {
+    if (!cartItem ) return;
+
+    try {
+      // Update quantity in database
+      const { error } = await supabase
+        .from('cart')
+        .update({ quantity: cartItem.quantity + 1 })
+        .match({
+          user_id: userId,
+          product_id: cartItem.id,
+          defaultSize: cartItem.selectedSize,
+          selectedSugar: cartItem.selectedSugar,
+        });
+
+      if (error) {
+        console.log(error);
+        alert('Failed to update cart quantity.');
+        return;
+      }
+
+      // Update Redux state
+      dispatch(increment({
+        id: cartItem.id,
+       selectedSize:cartItem.selectedSize,
+        selectedSugar:cartItem.selectedSugar
+      }));
+    } catch (error) {
+      console.error('Error in handleIncrement:', error);
+      alert('An error occurred while updating the cart.');
+    }
+  };
+  
+  
+
+
   // console.log(cartItems)
   const subtotal = useMemo(() => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  }, [cartItems]);
+    return cartItem.reduce((total, item) => total + item.price * item.quantity, 0);
+  }, [cartItem]);
   const discount = 50
   const total = useMemo(() => {
     return subtotal - discount;
@@ -68,7 +142,7 @@ const Cart = () => {
     }
   }
 
-  const renderItem = ({ item }: any) => {
+  const renderItem = ({ item }: { item: CartItemRedux }) => {
     const isFavourite = favourites.some(fav => fav.id === item.id);
     return (
       <View style={styles.card}>
@@ -115,11 +189,9 @@ const Cart = () => {
           <Text style={styles.tagfont}>{item.quantity}</Text>
           <Ionicons 
             name="add-circle" 
-            onPress={() => dispatch(increment({
-              id: item.id, 
-              selectedSize: item.selectedSize, 
-              selectedSugar: item.selectedSugar
-            }))} 
+            onPress={()=>handleIncrement(item)}
+          
+           
             size={30.25} 
             color="#00512C" 
           />
@@ -134,7 +206,7 @@ const Cart = () => {
       <SafeAreaView style={styles.container}>
         <View style={{marginLeft:15}}>
         <FlatList
-          data={cartItems}
+          data={cartItem}
           renderItem={renderItem}
           keyExtractor={(_, index) => index.toString()}
           contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -150,7 +222,7 @@ const Cart = () => {
             </View>
           }
           ListFooterComponent={
-            cartItems.length > 0 ? (
+            cartItem.length > 0 ? (
               <View style={{marginRight:12}}>
                 <View style={styles.total}>
                   <Text>SubTotal</Text>

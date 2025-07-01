@@ -25,7 +25,10 @@ expo-env.d.ts
 npm-debug.*
 yarn-debug.*
 yarn-error.*
-
+**/deno
+.dir
+android/app/.cxx/
+android/app/.cxx/**/*
 # macOS
 .DS_Store
 *.pem

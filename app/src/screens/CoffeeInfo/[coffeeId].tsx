@@ -2,8 +2,9 @@ import { CupSize } from '@/components/card/card.types';
 import CustomButton from '@/components/customButton/CustomButton';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import Star from "../../../../assets/icons/start.svg";
@@ -11,28 +12,28 @@ import { supabase } from '../../lib/supabase';
 import { addToCart, decrement, increment } from '../../redux/cartSlice';
 import { toggleFavourite } from '../../redux/favouriteSlice';
 import { RootState } from '../../redux/store';
-import { styles } from "./Coffee.styles";
-import { ActivityIndicator } from 'react-native-paper';
 import { insertIntoCart } from './coffee.function';
+import { styles } from "./Coffee.styles";
 
+type products = {
+  id: string;
+  title: string;
+  imageUrl: any;
+  hasSugar: boolean;
+  defaultSize: CupSize;
+  cupSizes: Record<CupSize, number>;
+  category_id: string;
+}
 
 const CoffeeInfo = () => {
   const { coffeeId } = useLocalSearchParams();
   const [coffee, setCoffee] = useState<products | null>(null);
-  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const {items} = useSelector((state: RootState) => state.cart);
   const [selectedSize, setSelectedSize] = useState<CupSize>('small');
   const [selectedSugar, setSelectedSugar] = useState('No Sugar');
-  type products={
-    id: string;
-    title: string;
-    imageUrl: any;
-    hasSugar: boolean;
-    defaultSize: CupSize;
-    cupSizes: Record<CupSize, number>;
-    category_id:string
-  }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -52,32 +53,210 @@ const CoffeeInfo = () => {
       }
       setLoading(false);
     };
+ 
     if (coffeeId) fetchData();
   }, [coffeeId]);
 
   const dispatch = useDispatch();
   const favourites = useSelector((state: RootState) => state.favourites.items);
+  const { id } = useSelector((state: RootState) => state.user);
+  
   const isFavourite = coffee ? favourites.some(item => item.id === coffee.id) : false;
   const selectedPrice = coffee?.cupSizes?.[selectedSize] ?? 0;
-  const {id } = useSelector((state: RootState) => state.user);
-
-  const cartItem = cartItems.find(
+  // Find cart item with current selections
+  const cartItem = useMemo(()=> items.find(
     item => item.id === coffeeId &&
-      item.selectedSize === selectedSize &&
-      item.selectedSugar === selectedSugar
-  );
+      item.selectedSize === selectedSize
+  ),[items,coffeeId,selectedSize]);
+  console.log('cartItem',JSON.stringify(cartItem,null,2))
+ 
+  const handleDecrement = async () => {
+    if (!cartItem || !coffee) return;
+
+    try {
+      if (cartItem.quantity > 1) {
+        // Update quantity in database
+        const { error } = await supabase
+          .from('cart')
+          .update({ quantity: cartItem.quantity - 1 })
+          .match({
+            user_id: id,
+            product_id: coffee.id,
+            defaultSize: selectedSize,
+            selectedSugar: selectedSugar,
+          });
+
+        if (error) {
+          alert('Failed to update cart quantity.');
+          return;
+        }
+
+        // Update Redux state
+        dispatch(decrement({
+          id: coffee.id,
+          selectedSize,
+          selectedSugar
+        }));
+      } else {
+        // Remove item from database
+        const { error } = await supabase
+          .from('cart')
+          .delete()
+          .match({
+            user_id: id,
+            product_id: coffee.id,
+            defaultSize: selectedSize,
+            selectedSugar: selectedSugar,
+          });
+
+        if (error) {
+          alert('Failed to remove item from cart.');
+          return;
+        }
+
+        // Update Redux state
+        dispatch(decrement({
+          id: coffee.id,
+          selectedSize,
+          selectedSugar
+        }));
+      }
+    } catch (error) {
+      console.error('Error in handleDecrement:', error);
+      alert('An error occurred while updating the cart.');
+    }
+  };
+
+  const handleIncrement = async () => {
+    if (!cartItem || !coffee) return;
+
+    try {
+      // Update quantity in database
+      const { error } = await supabase
+        .from('cart')
+        .update({ quantity: cartItem.quantity + 1 })
+        .match({
+          user_id: id,
+          product_id: coffee.id,
+          defaultSize: selectedSize,
+          selectedSugar: selectedSugar,
+        });
+
+      if (error) {
+        console.log(error);
+        alert('Failed to update cart quantity.');
+        return;
+      }
+
+      // Update Redux state
+      dispatch(increment({
+        id: coffee.id,
+        selectedSize,
+        selectedSugar
+      }));
+    } catch (error) {
+      console.error('Error in handleIncrement:', error);
+      alert('An error occurred while updating the cart.');
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (!coffee) return;
+
+    try {
+      // Check if item already exists in cart
+      const { data: existingItem, error: checkError } = await supabase
+        .from('cart')
+        .select('*')
+        .match({
+          user_id: id,
+          product_id: coffee.id,
+          defaultSize: selectedSize,
+          selectedSugar: selectedSugar,
+        })
+        .single();
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('Error checking cart:', checkError);
+        alert('Error checking cart.');
+        return;
+      }
+
+      if (existingItem) {
+        // Update existing item quantity
+        const { error: updateError } = await supabase
+          .from('cart')
+          .update({ quantity: existingItem.quantity + 1 })
+          .match({
+            user_id: id,
+            product_id: coffee.id,
+            defaultSize: selectedSize,
+            selectedSugar: selectedSugar,
+          });
+
+        if (updateError) {
+          alert('Failed to update cart quantity.');
+          return;
+        }
+
+        // Update Redux state
+        dispatch(addToCart({
+          ...coffee,
+          imageUrl: typeof coffee.imageUrl === 'string' ? coffee.imageUrl : coffee.imageUrl?.uri,
+          selectedSize,
+          selectedSugar,
+          price: selectedPrice,
+          quantity: 1, // This will be added to existing quantity in Redux
+        }));
+      } else {
+        // Insert new item
+        const response = await insertIntoCart({
+          data: {
+            user_id: id,
+            product_id: coffee.id,
+            defaultSize: selectedSize,
+            selectedSugar: selectedSugar,
+            category_id: coffee.category_id,
+            quantity: 1,
+            price: selectedPrice,
+          },
+          id
+        });
+
+        if (response.error) {
+          alert('Failed to add to cart.');
+          console.error(response.error);
+          return;
+        }
+
+        // Add to Redux state
+        dispatch(addToCart({
+          ...coffee,
+          imageUrl: typeof coffee.imageUrl === 'string' ? coffee.imageUrl : coffee.imageUrl?.uri,
+          selectedSize,
+          selectedSugar,
+          price: selectedPrice,
+          quantity: 1,
+        }));
+      }
+    } catch (error) {
+      console.error('Error in handleAddToCart:', error);
+      alert('An error occurred while adding to cart.');
+    }
+  };
 
   if (loading) {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="large" color="#000" />
           </View>
         </SafeAreaView>
       </SafeAreaProvider>
     );
   }
+
   if (error || !coffee) {
     return (
       <SafeAreaProvider>
@@ -95,7 +274,7 @@ const CoffeeInfo = () => {
           <View style={styles.header}>
             <Image source={typeof coffee.imageUrl === 'string' ? { uri: coffee.imageUrl } : coffee.imageUrl} style={styles.image} />
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <TouchableOpacity style={styles.icon} onPress={() => router.push("/(tabs)/home")} >
+              <TouchableOpacity style={styles.icon} onPress={() => router.back()} >
                 <Ionicons name='chevron-back' size={30} color="#00582F" />
               </TouchableOpacity>
               <TouchableOpacity
@@ -121,8 +300,9 @@ const CoffeeInfo = () => {
             </View>
           </View>
         </View>
+
         <View style={styles.info}>
-          <Text style={styles.heading} >Cup Sizes</Text>
+          <Text style={styles.heading}>Cup Sizes</Text>
           <View style={styles.cupSizesContainer}>
             {coffee.cupSizes && Object.entries(coffee.cupSizes).map(([size, price]) => (
               <TouchableOpacity
@@ -145,8 +325,9 @@ const CoffeeInfo = () => {
             ))}
           </View>
         </View>
+
         <View style={styles.info}>
-          <Text style={styles.heading} >Level Sugar</Text>
+          <Text style={styles.heading}>Level Sugar</Text>
           {!coffee.hasSugar ? (
             <View style={styles.cupSizesContainer}>
               <View style={[styles.cupSizeBox, styles.cupSizeBoxActive]}>
@@ -177,73 +358,35 @@ const CoffeeInfo = () => {
             </View>
           )}
         </View>
+
         <View style={styles.info}>
-          <Text style={styles.heading} >About</Text>
+          <Text style={styles.heading}>About</Text>
           <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rerum iusto, ipsa ipsam animi illo dolor expedita modi repudiandae nemo, corrupti praesentium quo. Possimus at non enim asperiores quis inventore sequi!...<Text style={styles.subText2}>Read More</Text></Text>
         </View>
+
         {cartItem ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 20, marginTop: 10 }}>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginHorizontal: 20,
+            marginTop: 10
+          }}>
+            {/* Decrease Quantity or Delete */}
             <TouchableOpacity
-              onPress={async () => {
-                if (cartItem.quantity > 1) {
-                  const { error } = await supabase
-                    .from('cart')
-                    .update({ quantity: cartItem.quantity - 1 })
-                    .match({
-                      user_id: id,
-                      product_id: coffee.id,
-                      defaultSize: selectedSize,
-                      hasSugar: coffee.hasSugar,
-                    });
-                  if (error) {
-                    alert('Failed to update cart quantity.');
-                    return;
-                  }
-                } else {
-                  await supabase
-                    .from('cart')
-                    .delete()
-                    .match({
-                      user_id: id,
-                      product_id: coffee.id,
-                      defaultSize: selectedSize,
-                      hasSugar: coffee.hasSugar,
-                    });
-                }
-                dispatch(decrement({
-                  id: coffee.id,
-                  selectedSize,
-                  selectedSugar
-                }));
-              }}
+              onPress={handleDecrement}
               style={{ backgroundColor: '#eee', padding: 10, borderRadius: 8 }}
             >
               <Ionicons name="remove-outline" size={18} />
             </TouchableOpacity>
+
             <Text style={{ fontSize: 18, marginHorizontal: 20 }}>
               {cartItem.quantity}
             </Text>
+
+            {/* Increase Quantity */}
             <TouchableOpacity
-              onPress={async () => {
-                const { error } = await supabase
-                  .from('cart')
-                  .update({ quantity: cartItem.quantity + 1 })
-                  .match({
-                    user_id: id,
-                    product_id: coffee.id,
-                    defaultSize: selectedSize,
-                    hasSugar: coffee.hasSugar,
-                  });
-                if (error) {
-                  alert('Failed to update cart quantity.');
-                  return;
-                }
-                dispatch(increment({
-                  id: coffee.id,
-                  selectedSize,
-                  selectedSugar
-                }));
-              }}
+              onPress={handleIncrement}
               style={{ backgroundColor: '#eee', padding: 10, borderRadius: 8 }}
             >
               <Ionicons name='add-outline' size={18} />
@@ -253,27 +396,7 @@ const CoffeeInfo = () => {
           <CustomButton
             title='Add to Cart |'
             price={selectedPrice}
-            onPress={async() =>{
-            await insertIntoCart
-                ({
-                  user_id: id,
-                  product_id: coffee.id,
-                  title: coffee.title,
-                  imageUrl: typeof coffee.imageUrl === 'string' ? coffee.imageUrl : '',
-                  hasSugar: coffee.hasSugar,
-                  defaultSize: selectedSize,
-                  category_id: coffee.category_id,
-                  quantity: 1,
-                  price: selectedPrice,
-                }
-              )
-              dispatch(addToCart({
-              ...coffee,
-              selectedSize,
-              selectedSugar,
-              price: selectedPrice,
-              quantity: 1,
-            }))}}
+            onPress={handleAddToCart}
           />
         )}
       </SafeAreaView>
@@ -281,5 +404,4 @@ const CoffeeInfo = () => {
   );
 }
 
-export default CoffeeInfo
-
+export default CoffeeInfo;

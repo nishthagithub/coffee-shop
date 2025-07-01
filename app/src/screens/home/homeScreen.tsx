@@ -19,7 +19,8 @@ type products={
   hasSugar: boolean;
   defaultSize: CupSize;
   cupSizes: Record<CupSize, number>;
-  category_id:string
+  category_id:string,
+  selectedSugar:string
 }
 
 

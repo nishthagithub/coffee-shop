@@ -1,8 +1,7 @@
 import { CupSize } from "@/components/card/card.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ImageSourcePropType } from "react-native";
 
-export interface CartItem {
+export interface CartItemRedux {
   id: string;
   imageUrl: string;
   title: string;
@@ -14,7 +13,7 @@ export interface CartItem {
 }
 
 interface CartState {
-  items: CartItem[];
+  items: CartItemRedux[];
 }
 
 const initialState: CartState = {
@@ -25,11 +24,12 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<CartItem>) => {
+    addToCart: (state, action: PayloadAction<CartItemRedux>) => {
       const exists = state.items.find((item) => 
         item.id === action.payload.id && 
         item.selectedSize === action.payload.selectedSize && 
-        item.selectedSugar === action.payload.selectedSugar
+        item.selectedSugar === action.payload.selectedSugar&&
+        item.imageUrl === action.payload.imageUrl
       );
       
       if (exists) {
@@ -42,6 +42,7 @@ const cartSlice = createSlice({
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
     increment:(state,action:PayloadAction<{id:string,selectedSugar: string,selectedSize:CupSize}>)=>{
+      console.log("increment payload",action.payload)
       const item = state.items.find((item) => 
         item.id === action.payload.id &&
         item.selectedSize === action.payload.selectedSize &&
@@ -69,13 +70,16 @@ const cartSlice = createSlice({
         }
       }
     },
+    setCart: (state, action: PayloadAction<CartItemRedux[]>) => {
+      state.items = action.payload;
+    },
     clearCart:(state)=>{
      state.items=[];
     }
   }
 });
 
-export const { addToCart, removeFromCart, increment, decrement, clearCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, increment, decrement, clearCart,setCart } = cartSlice.actions;
 
 // Selector to get total number of items
 export const selectCartItemsCount = (state: { cart: CartState }) => state.cart.items.length;
