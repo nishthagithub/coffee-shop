@@ -89,7 +89,63 @@ console.log('cartItem',JSON.stringify(cartItem,null,2))
       alert('An error occurred while updating the cart.');
     }
   };
-  
+
+  const handleDecrement=async(cartItem:CartItemRedux)=>{
+    if(!cartItem) return;
+    try {
+      if(cartItem.quantity > 1){
+        const { error } = await supabase
+        .from('cart')
+        .update({ quantity: cartItem.quantity - 1 })
+        .match({
+          user_id: userId,
+          product_id: cartItem.id,
+          defaultSize: cartItem.selectedSize,
+          selectedSugar: cartItem.selectedSugar,
+        });
+
+      if (error) {
+        console.log(error);
+        alert('Failed to update cart quantity.');
+        return;
+      }
+      dispatch(decrement({
+        id: cartItem.id,
+        selectedSize: cartItem.selectedSize,
+        selectedSugar: cartItem.selectedSugar
+      }));
+      }
+      else{
+        const { error } = await supabase
+        .from('cart')
+        .delete()
+        .match({
+          user_id: userId,
+          product_id: cartItem.id,
+          defaultSize: cartItem.selectedSize,
+          selectedSugar: cartItem.selectedSugar,
+        });
+
+      if (error) {
+        console.log(error);
+        alert('Failed to remove item from cart.');
+        return;
+      }
+
+      // Remove item from Redux
+      dispatch(decrement({
+        id: cartItem.id,
+        selectedSize: cartItem.selectedSize,
+        selectedSugar: cartItem.selectedSugar,
+        
+      }));
+      }
+    } catch (error) {
+      console.error('Error in handleDecrement:', error);
+      alert('An error occurred while updating the cart.');
+    }
+
+  }
   
 
 
@@ -178,11 +234,7 @@ console.log('cartItem',JSON.stringify(cartItem,null,2))
           <View style={styles.tags}>
           <Ionicons 
             name="remove-circle" 
-            onPress={() => dispatch(decrement({
-              id: item.id, 
-              selectedSize: item.selectedSize, 
-              selectedSugar: item.selectedSugar
-            }))} 
+            onPress={()=>handleDecrement(item)} 
             size={30.25} 
             color="#00512C" 
           />

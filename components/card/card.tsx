@@ -24,6 +24,7 @@ const Card = ({imageUrl, title,hasSugar,defaultSize,cupSizes,showHeartIcon,id}: 
       hasSugar: hasSugar ?? false
     }))
   }
+  
   return (
     <View style={styles.card}>
       <Image 
