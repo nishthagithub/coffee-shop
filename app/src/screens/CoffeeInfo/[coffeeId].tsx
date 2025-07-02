@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Star from "../../../../assets/icons/start.svg";
 import { supabase } from '../../lib/supabase';
 import { addToCart, decrement, increment } from '../../redux/cartSlice';
-import { toggleFavourite } from '../../redux/favouriteSlice';
 import { RootState } from '../../redux/store';
 import { insertIntoCart } from './coffee.function';
 import { styles } from "./Coffee.styles";
@@ -33,6 +32,8 @@ const CoffeeInfo = () => {
   const [selectedSugar, setSelectedSugar] = useState('No Sugar');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isFavourite, setIsFavourite] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +41,14 @@ const CoffeeInfo = () => {
       setError(null);
       const { data, error } = await supabase
         .from('coffee_products')
-        .select('*')
+        .select(`
+          *,
+          favourites (
+            id,
+            user_id,
+            product_id
+          )
+        `)
         .eq('id', coffeeId)
         .single();
       if (error) {
@@ -50,25 +58,47 @@ const CoffeeInfo = () => {
         setCoffee(data);
         setSelectedSize(data?.defaultSize || 'small');
         setSelectedSugar(data?.hasSugar ? 'Medium' : 'No Sugar');
+        setIsFavourite(data?.favourites?.some((f: any) => f.user_id === id) ?? false);  
       }
       setLoading(false);
     };
  
     if (coffeeId) fetchData();
   }, [coffeeId]);
+  const handleToggleFavourite = async () => {
+    if (!coffee || !id) return;
+  
+    if (isFavourite) {
+      const { error } = await supabase
+        .from('favourites')
+        .delete()
+        .match({ user_id: id, product_id: coffee.id });
+  
+      if (!error) {
+        setIsFavourite(false);
+      }
+    } else {
+      const { error } = await supabase
+        .from('favourites')
+        .insert([{ user_id: id, product_id: coffee.id }]);
+  
+      if (!error) {
+        setIsFavourite(true);
+      }
+    }
+  };
+  
+  
 
   const dispatch = useDispatch();
-  const favourites = useSelector((state: RootState) => state.favourites.items);
   const { id } = useSelector((state: RootState) => state.user);
-  
-  const isFavourite = coffee ? favourites.some(item => item.id === coffee.id) : false;
+
   const selectedPrice = coffee?.cupSizes?.[selectedSize] ?? 0;
-  // Find cart item with current selections
   const cartItem = useMemo(()=> items.find(
     item => item.id === coffeeId &&
       item.selectedSize === selectedSize
   ),[items,coffeeId,selectedSize]);
-  console.log('cartItem',JSON.stringify(cartItem,null,2))
+  // console.log('cartItem',JSON.stringify(cartItem,null,2))
  
   const handleDecrement = async () => {
     if (!cartItem || !coffee) return;
@@ -206,7 +236,7 @@ const CoffeeInfo = () => {
           selectedSize,
           selectedSugar,
           price: selectedPrice,
-          quantity: 1, // This will be added to existing quantity in Redux
+          quantity: 1, 
         }));
       } else {
         // Insert new item
@@ -279,9 +309,9 @@ const CoffeeInfo = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.icon}
-                onPress={() => {
-                  dispatch(toggleFavourite(coffee));
-                }}
+                onPress={() => handleToggleFavourite()
+                  
+              }
               >
                 <Ionicons name={isFavourite ? 'heart' : 'heart-outline'} size={25} color="#FF4848" />
               </TouchableOpacity>

@@ -120,5 +120,6 @@ export const getCartItems = async (user_id: string) => {
         category_id
       )
     `)
+    .eq("user_id",user_id)
   return response as { data: CartItem[] | null; error: any };
 };

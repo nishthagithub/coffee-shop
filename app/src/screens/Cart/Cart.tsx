@@ -21,19 +21,14 @@ import { styles } from "./Cart.styles"
 const Cart = () => {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.user.id);
-  // console.log(userId)
   const cartItem = useSelector((state: RootState) => state.cart.items);
-  console.log("redux item",cartItem)
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const favourites = useSelector((state: RootState) => state.favourites.items);
   const focused=useIsFocused()
 
   useEffect(() => {
-    console.log('calling')
     const fetchCart = async () => {
       const { data, error } = await getCartItems(userId);
    if (data) {
-    console.log('data',JSON.stringify(data,null,2))
      const mappedCartItems = data.map(item => ({
        id: item.coffee_products.id,
        imageUrl: item.coffee_products.imageUrl ?? '',
@@ -44,7 +39,6 @@ const Cart = () => {
        quantity: item.quantity,
        hasSugar: item.coffee_products.hasSugar,
      }));
-     console.log("cartdatraaa",JSON.stringify( data,null,2))
      dispatch(setCart(mappedCartItems));
    } else { 
         console.error(error);
@@ -52,10 +46,6 @@ const Cart = () => {
     };
     fetchCart();
   }, [focused]);
-
-  useEffect(()=>{
-console.log('cartItem',JSON.stringify(cartItem,null,2))
-  },[cartItem])
   
   const handleIncrement = async (cartItem : CartItemRedux) => {
     if (!cartItem ) return;
@@ -146,10 +136,6 @@ console.log('cartItem',JSON.stringify(cartItem,null,2))
     }
 
   }
-  
-
-
-  // console.log(cartItems)
   const subtotal = useMemo(() => {
     return cartItem.reduce((total, item) => total + item.price * item.quantity, 0);
   }, [cartItem]);
@@ -169,7 +155,6 @@ console.log('cartItem',JSON.stringify(cartItem,null,2))
           "Content-Type":"application/json"
         }
       })
-      // console.log('res',JSON.stringify(response,null,2))
       const { clientSecret } = response.data;
       const initResult = await initPaymentSheet({
         merchantDisplayName: 'My Coffee Shop',

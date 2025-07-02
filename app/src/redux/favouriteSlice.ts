@@ -20,8 +20,11 @@ const favouriteSlice=createSlice({
         else {
             state.items.push(action.payload);
           }
-     }
+     },
+     setFavourites: (state, action: PayloadAction<productCardProps[]>) => {
+      state.items = action.payload;
+    }
     }
 })
-export const { toggleFavourite } = favouriteSlice.actions;
+export const { toggleFavourite,setFavourites } = favouriteSlice.actions;
 export default favouriteSlice.reducer;

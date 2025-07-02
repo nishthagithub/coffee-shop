@@ -1,4 +1,3 @@
-import { ImageSourcePropType } from "react-native";
 export type CupSize = 'small' | 'medium' | 'large';
 export interface productCardProps {
     id: string;
@@ -8,4 +7,6 @@ export interface productCardProps {
     defaultSize: CupSize;
     cupSizes: Record<CupSize, number>;
     showHeartIcon?: boolean;
+    price?: number;
+    favouriteIds?: string[] | undefined;
 }

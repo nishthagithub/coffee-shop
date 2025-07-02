@@ -1,16 +1,17 @@
 import Card from '@/components/card/card';
 import { CupSize } from '@/components/card/card.types';
+import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { getCurrentUser } from '../../auth/supabaseAuth';
-import { supabase } from '../../lib/supabase';
-import { styles } from './homeScreen.styles';
 import { useDispatch, useSelector } from 'react-redux';
+import { supabase } from '../../lib/supabase';
 import { AppDispatch, RootState } from '../../redux/store';
 import { fetchUserData } from '../../redux/userSlice';
+import { getFavouriteItem } from '../favorites/favorites.function';
+import { styles } from './homeScreen.styles';
 
 type products={
   id: string;
@@ -28,10 +29,9 @@ const HomeScreen = () => {
   const [coffeeData,setCoffeeData]=useState<products[]>([])
   const [loading,setLoading]=useState(true)
   const dispatch = useDispatch<AppDispatch>();
- 
+  const userId = useSelector((state: RootState) => state.user.id);
   const username = useSelector((state: RootState) => state.user.username);
-  // console.log("user",username)
-  
+  const [favouriteId, setFavouriteIds] = useState<string[]>([]);
 
   const fetchData=async()=>{
     const {data,error}=await supabase.from("coffee_products").select("*")
@@ -47,7 +47,17 @@ const HomeScreen = () => {
     fetchData();
     dispatch(fetchUserData());
   },[])
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchFavourites = async () => {
+        const favs = await getFavouriteItem(userId);
+        setFavouriteIds(favs.map(String)); // ensure string[]
+      };
+      fetchFavourites();
+    }, [userId])
+  );
 
+  
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -81,12 +91,13 @@ const HomeScreen = () => {
                         onPress={() => router.push(`/src/screens/CoffeeInfo/${item.id}`)}
                       >
                         <Card
-                          id={item.id}
+                          id={item.id.toString()}
                           title={item.title}
                           imageUrl={item.imageUrl}
                           hasSugar={item.hasSugar}
                           defaultSize={item.defaultSize}
                           cupSizes={item.cupSizes}
+                          favouriteIds={favouriteId}
                         />
                       </TouchableOpacity>
                     )}
@@ -110,7 +121,9 @@ const HomeScreen = () => {
                           >
                             <Card
                               {...item}
+                              id={item.id.toString()}
                               showHeartIcon={true}
+                              favouriteIds={favouriteId}
                             />
                           </TouchableOpacity>
                         )}

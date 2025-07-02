@@ -42,7 +42,6 @@ const cartSlice = createSlice({
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
     increment:(state,action:PayloadAction<{id:string,selectedSugar: string,selectedSize:CupSize}>)=>{
-      console.log("increment payload",action.payload)
       const item = state.items.find((item) => 
         item.id === action.payload.id &&
         item.selectedSize === action.payload.selectedSize &&

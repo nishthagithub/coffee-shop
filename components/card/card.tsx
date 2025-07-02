@@ -1,17 +1,47 @@
+import { supabase } from '@/app/src/lib/supabase';
 import { addToCart } from '@/app/src/redux/cartSlice';
-import { toggleFavourite } from '@/app/src/redux/favouriteSlice';
 import { RootState } from '@/app/src/redux/store';
-import React from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './card.style';
 import { productCardProps } from "./card.types";
 
-const Card = ({imageUrl, title,hasSugar,defaultSize,cupSizes,showHeartIcon,id}: productCardProps) => {
+const Card = ({imageUrl, title,hasSugar,defaultSize,cupSizes,showHeartIcon,id,favouriteIds}: productCardProps) => {
   const dispatch =useDispatch();
-  const favourite=useSelector((state:RootState)=>state.favourites.items)
-  const isFavourite = favourite.some(item => item.id === id);
+  const [isFavourite, setIsFavourite] = useState((favouriteIds ?? []).includes(id));
+  const userId = useSelector((state: RootState) => state.user.id);
+
+  useEffect(() => {
+    setIsFavourite((favouriteIds ?? []).includes(id));
+  }, [favouriteIds, id]); 
+  
+  const handleFavoriteItem = async () => {
+    if (isFavourite) {
+      const { error } = await supabase
+        .from('favourites')
+        .delete()
+        .match({ user_id: userId, product_id: id });
+  
+      if (!error) {
+        setIsFavourite(false);
+      } else {
+        console.error("Unfavourite error:", error.message);
+      }
+    } else {
+      const { error } = await supabase
+        .from('favourites')
+        .insert([{ user_id: userId, product_id: id }]);
+  
+      if (!error) {
+        setIsFavourite(true);
+      } else {
+        console.error("Favourite error:", error.message);
+      }
+    }
+  };
+  
   const Addtocart=()=>{
     dispatch(addToCart({
       id,
@@ -36,7 +66,7 @@ const Card = ({imageUrl, title,hasSugar,defaultSize,cupSizes,showHeartIcon,id}: 
      <View style={styles.icon}>
         <Text style={styles.title}>{title}</Text>
         {showHeartIcon && (
-          <TouchableOpacity onPress={()=>dispatch(toggleFavourite({ id, imageUrl, title, hasSugar, defaultSize, cupSizes, showHeartIcon }))}>
+          <TouchableOpacity onPress={()=>handleFavoriteItem()}>
             <Ionicons name={isFavourite ? 'heart' : 'heart-outline'} size={17} color="#FF4848" style={{marginTop:8}} />
             </TouchableOpacity>
         )}
