@@ -1,22 +1,32 @@
-import { Slot } from 'expo-router'
+import { Stack } from 'expo-router'
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import AuthContext from "../app/src/auth/authContext"
 
 const _layout = () => {
   return (
+    
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Slot />
-      </SafeAreaView>
+      <AuthContext>
+      <Stack screenOptions={{ headerShown: false }} initialRouteName='index'>
+      <Stack.Screen 
+          name="(tabs)" 
+         
+        />
+         <Stack.Screen 
+          name="index" 
+          
+         
+        />
+      
+       
+        
+      
+      </Stack>
+      </AuthContext>
     </SafeAreaProvider>
   )
 }
 
 export default _layout
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  }
-})

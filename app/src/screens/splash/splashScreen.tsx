@@ -1,40 +1,42 @@
 import { Text } from '@react-navigation/elements';
-import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
-import * as ExpoSplashScreen from 'expo-splash-screen';
-import React from 'react';
+import { useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
 import { Image, ImageBackground, View } from 'react-native';
+import { useAuth } from '../../auth/authContext';
 import { styles } from './splashScreen.styles';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-// Keep the splash screen visible while we fetch resources
-ExpoSplashScreen.preventAutoHideAsync();
 
 const SplashScreen = () => {
-  const [fontsLoaded] = useFonts({
-    'Montserrat_500Medium': require('../../../../assets/fonts/Montserrat_500Medium.ttf'),
-    'Montserrat-SemiBold': require('../../../../assets/fonts/Montserrat-SemiBold.ttf'),
-  });
+  const router = useRouter();
+  const { checkAuth } = useAuth();
 
-  React.useEffect(() => {
-    if (fontsLoaded) {
-      // Hide splash screen once fonts are loaded
-      ExpoSplashScreen.hideAsync();
+  useEffect(() => {
+    const userAuth = async () => {
+      const isAuthenticated = await checkAuth();
+      if (isAuthenticated) {
+        router.replace("/(tabs)/home");
+      } else {
+        router.replace("/src/screens/login/Login");
+      }
     }
-  }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
+    const timeout = setTimeout(() => {
+      userAuth();
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
-    <SafeAreaView>
     <View style={styles.container}>
-      <LinearGradient colors={['#D7A870', '#B08149']} style={styles.gradient}>
+      <LinearGradient
+        colors={['#D7A870', '#B08149']}
+        style={styles.gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
         <ImageBackground
           source={require('../../../../assets/images/splash.png')}
           style={styles.splashImage}
-          resizeMode="cover"
         >
           <Image
             source={require('../../../../assets/images/cover-img.png')}
@@ -42,12 +44,13 @@ const SplashScreen = () => {
           />
           <View style={styles.textContainer}>
             <Text style={styles.text}>Coffee so good, your taste buds will love it</Text>
+          </View>
+          <View style={styles.subTextContainer}>
             <Text style={styles.subText}>The best grain, the finest roast, the most powerful flavor.</Text>
           </View>
         </ImageBackground>
       </LinearGradient>
     </View>
-    </SafeAreaView>
   );
 };
 
